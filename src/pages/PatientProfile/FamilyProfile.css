@@ -1,0 +1,711 @@
+/* الألوان الأساسية - نفس الألوان الأصلية */
+:root {
+    --primary: #0097A7;
+    --primary-dark: #006064;
+    --primary-light: #B2EBF2;
+    --accent: #FFC107;
+    --text: #212121;
+    --text-secondary: #757575;
+    --background: #E0F7FA;
+    --card-bg: #FFFFFF;
+    --error: #D32F2F;
+    --success: #4CAF50;
+    --male: #2196F3;
+    --female: #E91E63;
+    --warning: #FF9800;
+    --border: #BDBDBD;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* التحميل */
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+}
+
+.loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+    font-size: 2.5rem;
+    color: var(--accent);
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* الهيكل العام */
+.family-profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    font-family: 'Tajawal', sans-serif;
+    direction: rtl;
+    background-color: var(--background);
+    min-height: 100vh;
+}
+
+.profile-header-section {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.profile-header-section h1 {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.header-description {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* التبويبات */
+.navigation-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--primary-light);
+    padding-bottom: 0.5rem;
+}
+
+.tab-button {
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.tab-button.active {
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+.tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: var(--primary);
+    border-radius: 3px 3px 0 0;
+}
+
+.tab-button:hover:not(.active) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* إشعارات النجاح */
+.success-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--success);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.success-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.success-icon {
+    font-size: 1.2rem;
+}
+
+/* قسم إضافة العضو */
+.add-member-section {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+.form-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.form-header h2 {
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.form-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.form-grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #FAFAFA;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 151, 167, 0.2);
+    background-color: white;
+    outline: none;
+}
+
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.error-message {
+    color: var(--error);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.error {
+    border-color: var(--error) !important;
+    background-color: #FFEBEE !important;
+}
+
+.hint-message {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* خيارات صلة القرابة */
+.relation-options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.relation-option {
+    padding: 0.6rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background-color: white;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.relation-option.active {
+    border-color: var(--primary);
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+.relation-option svg {
+    font-size: 1.2rem;
+}
+
+/* أزرار الإجراءات */
+.form-actions-container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.primary-action-button {
+    padding: 0.85rem 1.75rem;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.primary-action-button:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.secondary-action-button {
+    padding: 0.85rem 1.75rem;
+    background-color: white;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.secondary-action-button:hover {
+    background-color: var(--primary-light);
+}
+
+/* قسم قائمة الأعضاء */
+.members-list-section {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.empty-state-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+}
+
+.empty-state-content {
+    text-align: center;
+    max-width: 400px;
+    padding: 2rem;
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.empty-state-content h3 {
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.empty-state-content p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.list-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.list-header h2 {
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-bottom: 0.25rem;
+}
+
+.list-header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* شريط البحث */
+.search-container {
+    position: relative;
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #FAFAFA;
+}
+
+.search-container input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 151, 167, 0.2);
+    background-color: white;
+    outline: none;
+}
+
+.search-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+}
+
+.clear-search {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+}
+
+.clear-search:hover {
+    color: var(--primary-dark);
+}
+
+.no-results {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.warning-icon {
+    font-size: 2rem;
+    color: var(--warning);
+}
+
+.clear-search-button {
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.clear-search-button:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* بطاقات الأعضاء */
+.members-grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.member-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    border-top: 4px solid var(--primary);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.member-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.member-gender-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.member-gender-icon.male {
+    background-color: var(--male);
+}
+
+.member-gender-icon.female {
+    background-color: var(--female);
+}
+
+.member-main-info {
+    flex-grow: 1;
+}
+
+.member-card h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+}
+
+.member-relation-badge {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.card-body {
+    margin: 1rem 0;
+    flex-grow: 1;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px dashed var(--border);
+}
+
+.info-row:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.info-row span {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.info-row strong {
+    color: var(--text);
+    text-align: left;
+    max-width: 60%;
+}
+
+.truncate-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.notes-row {
+    flex-direction: column;
+}
+
+.notes-content {
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background-color: #F8F9F9;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.edit-action-button {
+    padding: 0.65rem 1.25rem;
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.edit-action-button:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+.delete-action-button {
+    padding: 0.65rem 1.25rem;
+    background-color: #FFEBEE;
+    color: var(--error);
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.delete-action-button:hover {
+    background-color: var(--error);
+    color: white;
+}
+
+/* التصميم المتجاوب */
+@media (max-width: 768px) {
+    .family-profile-container {
+        padding: 1.5rem 1rem;
+    }
+
+    .profile-header-section h1 {
+        font-size: 1.7rem;
+    }
+
+    .navigation-tabs {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .tab-button {
+        justify-content: center;
+        border-radius: 6px;
+    }
+
+    .tab-button.active::after {
+        display: none;
+    }
+
+    .form-grid-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .members-grid-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions-container {
+        flex-direction: column;
+    }
+
+    .primary-action-button,
+    .secondary-action-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .success-notification {
+        width: 90%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-header-section h1 {
+        font-size: 1.5rem;
+    }
+
+    .form-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .relation-options-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card-actions {
+        flex-direction: column;
+    }
+
+    .edit-action-button,
+    .delete-action-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .search-container {
+        max-width: 100%;
+    }
+}

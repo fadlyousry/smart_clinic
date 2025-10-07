@@ -1,0 +1,119 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: var(--color-primary-dark);
+    min-width: 240px;
+    max-width: 250px;
+    min-height: 100vh;
+    color: var(--color-text-white);
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.sidebar-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-title {
+    font-family: var(--logo-font);
+    margin: 0;
+    padding: 20px;
+    color: var(--color-text-white);
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.logo-img {
+    width: 35px;
+    height: 35px;
+    margin: 0 5px;
+}
+
+.sidebar-list {
+    list-style: none;
+    padding: 10px;
+    margin-top: 10px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.sidebar-item {
+    margin: 5px 0;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: var(--color-text-white);
+    text-decoration: none;
+    direction: rtl;
+    border-radius: 15px;
+}
+
+.sidebar-link svg {
+    margin-left: 10px;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+    background-color: var(--color-primary);
+}
+
+.mobile-menu-btn,
+.close-btn {
+    display: none;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+@media (max-width: 767px) {
+    .mobile-menu-btn {
+        display: block;
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        background: var(--color-primary);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+        z-index: 1100;
+        cursor: pointer;
+    }
+
+    .sidebar.mobile {
+        transform: translateX(100%);
+    }
+
+    .sidebar.mobile.open {
+        transform: translateX(0);
+    }
+
+
+}
+
+@media (max-width: 768px) {
+    .close-btn {
+        display: inline;
+        background: none;
+        border: none;
+        color: var(--color-text-white);
+        font-size: 20px;
+        cursor: pointer;
+    }
+}

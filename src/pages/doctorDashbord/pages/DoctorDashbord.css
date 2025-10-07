@@ -1,0 +1,19 @@
+.doctor-dashboard {
+    display: flex;
+    direction: rtl;
+}
+
+.sidebar {
+    width: 240px;
+}
+
+.content {
+    flex: 1;
+    margin-right: 240px;
+}
+
+@media (max-width: 768px) {
+    .content {
+        margin-right: 0;
+    }
+}

@@ -1,0 +1,26 @@
+.style {
+  background-color: var(--color-primary-dark);
+  color: white;
+  padding: 30px;
+}
+
+h1,
+h3 {
+  color: var(--color-text-primary);
+}
+
+h1 {
+  color: khaki;
+  margin: 20px 0px;
+  font-size: 32px;
+}
+
+h1::before {
+  content: '🏥 ';
+}
+
+h3 {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin: 10px 0px;
+}

@@ -1,0 +1,295 @@
+.doctor-profile-container {
+    font-family: 'Tajawal', sans-serif;
+    direction: rtl;
+}
+
+.profile-header {
+    background-color: #26A69A;
+    color: white;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.profile-card {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.profile-card:hover {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.profile-image-container {
+    width: 12rem;
+    height: 12rem;
+    border-radius: 50%;
+    border: 4px solid #26A69A;
+    overflow: hidden;
+    margin: 0 auto;
+    position: relative;
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-info-section {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #26A69A;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #26A69A;
+    color: white;
+    border-radius: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.info-item-icon {
+    font-size: 1.5rem;
+}
+
+.info-item-content {
+    flex: 1;
+}
+
+.edit-button {
+    color: #26A69A;
+    transition: all 0.2s ease;
+}
+
+.edit-button:hover {
+    color: #00796B;
+    transform: scale(1.1);
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.form-input:focus {
+    border-color: #26A69A;
+    box-shadow: 0 0 0 2px rgba(38, 166, 154, 0.2);
+    outline: none;
+}
+
+.form-textarea {
+    min-height: 8rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.action-button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.save-button {
+    background-color: #DCF8C6;
+    color: #388E3C;
+}
+
+.cancel-button {
+    background-color: #FFEBEE;
+    color: #D32F2F;
+}
+
+.experience-item,
+.certificate-item {
+    background-color: #26A69A;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.experience-header,
+.certificate-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.image-preview {
+    max-width: 100%;
+    max-height: 10rem;
+    border-radius: 0.25rem;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.modal-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.modal-close {
+    position: absolute;
+    top: -3rem;
+    left: 0;
+    color: white;
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.modal-image {
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 0.5rem;
+}
+
+.add-button {
+    background-color: #26A69A;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.add-button:hover {
+    background-color: #00796B;
+}
+
+.delete-button {
+    color: #EF5350;
+    transition: all 0.2s ease;
+}
+
+.delete-button:hover {
+    color: #D32F2F;
+    transform: scale(1.1);
+}
+
+.certificate-image-placeholder {
+    width: 6rem;
+    height: 6rem;
+    background-color: #E0F7FA;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #26A69A;
+    font-size: 2rem;
+}
+
+
+
+/* Hover effects for sections */
+.profile-info-section:hover,
+.experience-item:hover,
+.certificate-item:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+}
+
+/* Contact info hover effect */
+.contact-info-container:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+}
+
+/* Hover effects for sections */
+.profile-info-section:hover,
+.experience-item:hover,
+.certificate-item:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+}
+
+/* Contact info hover effect */
+.contact-info-container:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+}
+
+
+/* Hover effects for all sections */
+.profile-info-section:hover,
+.experience-item:hover,
+.certificate-item:hover,
+.contact-info-item:hover {
+    transform: scale(1.03);
+    transition: transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+/* Add some spacing between sections */
+.profile-info-section,
+.experience-item,
+.certificate-item {
+    margin-bottom: 1.5rem;
+    transition: all 0.2s ease;
+}
+
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .profile-image-container {
+        width: 10rem;
+        height: 10rem;
+    }
+
+    .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}

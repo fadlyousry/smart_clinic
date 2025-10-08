@@ -117,8 +117,7 @@ Built using **React.js, Tailwind CSS, Zustand, and Supabase**, the system provid
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/health_project.git
-   cd health_project
+   git clone https://github.com/fadlyousry/smart_clinic.git
    ```
 2. Install dependencies:
 
@@ -143,7 +142,7 @@ Built using **React.js, Tailwind CSS, Zustand, and Supabase**, the system provid
 
 * Real-time notifications for upcoming appointments.
 * Export reports (PDF/Excel) for prescriptions and statistics.
-* Role-specific dashboards for enhanced usability.
+
 
 ---
 

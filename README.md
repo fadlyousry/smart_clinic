@@ -144,9 +144,9 @@ Built using **React.js, Tailwind CSS, Zustand, and Supabase**, the system provid
 ### 🖼️ Screenshots
 | Dashboard | Patients | Prescriptions |
 |------------|-----------|----------------|
-<img width="1547" height="892" alt="Screenshot 2025-10-08 182138" src="https://github.com/user-attachments/assets/0ec62950-aad7-4243-a235-4aa78e0703b7" />
-<img width="1521" height="862" alt="Screenshot 2025-10-08 181920" src="https://github.com/user-attachments/assets/6cd56283-3a96-45d3-858e-9c845708eb60" />
-<img width="1408" height="866" alt="Screenshot 2025-10-08 181752" src="https://github.com/user-attachments/assets/5e569a14-53cd-4c03-9663-bbcdc75b07c5" />
+<img width="350" height="210" alt="Screenshot 2025-10-08 182138" src="https://github.com/user-attachments/assets/0ec62950-aad7-4243-a235-4aa78e0703b7" />
+<img width="350" height="210" alt="Screenshot 2025-10-08 181920" src="https://github.com/user-attachments/assets/6cd56283-3a96-45d3-858e-9c845708eb60" />
+<img width="350" height="210" alt="Screenshot 2025-10-08 181752" src="https://github.com/user-attachments/assets/5e569a14-53cd-4c03-9663-bbcdc75b07c5" />
 <img width="1619" height="895" alt="Screenshot 2025-10-08 181700" src="https://github.com/user-attachments/assets/d2524bd6-395c-47c5-b4c1-1d51f8f5e368" />
 <img width="808" height="951" alt="Screenshot 2025-10-08 185845" src="https://github.com/user-attachments/assets/0c52ca58-48d9-4782-b0b0-03688a74cc00" />
 <img width="1548" height="877" alt="Screenshot 2025-10-08 185350" src="https://github.com/user-attachments/assets/9cb9f479-447e-4376-9b0b-a1c114fde693" />

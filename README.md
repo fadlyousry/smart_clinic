@@ -133,9 +133,30 @@ Built using **React.js, Tailwind CSS, Zustand, and Supabase**, the system provid
 
    ```
    http://localhost:5173
-   ```
+   ```<img width="479" height="940" alt="Screenshot 2025-10-08 191054" src="https://github.com/user-attachments/assets/8cc60f02-3c51-4241-a858-57a9e3f6f24d" />
+<img width="577" height="942" alt="Screenshot 2025-10-08 191042" src="https://github.com/user-attachments/assets/86b7d431-a37f-408e-bcb1-18bc506f318f" />
+<img width="1513" height="900" alt="Screenshot 2025-10-08 190628" src="https://github.com/user-attachments/assets/4e738156-28cc-4c2d-bb98-252c7f524fcb" />
+<img width="1380" height="904" alt="Screenshot 2025-10-08 190427" src="https://github.com/user-attachments/assets/f06a23a3-9400-455d-8a03-dcea60bc7681" />
+<img width="1528" height="891" alt="Screenshot 2025-10-08 190409" src="https://github.com/user-attachments/assets/57e82aa9-3390-4bf3-b15e-2b7a1a4df61c" />
+
 
 ---
+### 🖼️ Screenshots
+| Dashboard | Patients | Prescriptions |
+|------------|-----------|----------------|
+<img width="1547" height="892" alt="Screenshot 2025-10-08 182138" src="https://github.com/user-attachments/assets/0ec62950-aad7-4243-a235-4aa78e0703b7" />
+<img width="1521" height="862" alt="Screenshot 2025-10-08 181920" src="https://github.com/user-attachments/assets/6cd56283-3a96-45d3-858e-9c845708eb60" />
+<img width="1408" height="866" alt="Screenshot 2025-10-08 181752" src="https://github.com/user-attachments/assets/5e569a14-53cd-4c03-9663-bbcdc75b07c5" />
+<img width="1619" height="895" alt="Screenshot 2025-10-08 181700" src="https://github.com/user-attachments/assets/d2524bd6-395c-47c5-b4c1-1d51f8f5e368" />
+<img width="808" height="951" alt="Screenshot 2025-10-08 185845" src="https://github.com/user-attachments/assets/0c52ca58-48d9-4782-b0b0-03688a74cc00" />
+<img width="1548" height="877" alt="Screenshot 2025-10-08 185350" src="https://github.com/user-attachments/assets/9cb9f479-447e-4376-9b0b-a1c114fde693" />
+<img width="1500" height="887" alt="Screenshot 2025-10-08 182047" src="https://github.com/user-attachments/assets/5c89d525-53d0-46bf-b4d2-06870fdb94aa" />
+<img width="1544" height="883" alt="Screenshot 2025-10-08 190358" src="https://github.com/user-attachments/assets/eba3b15f-2965-41e8-8789-76b3c6e6a7d8" />
+<img width="1481" height="894" alt="Screenshot 2025-10-08 190341" src="https://github.com/user-attachments/assets/f0d67309-7a69-4894-b98c-3635b4de35e9" />
+<img width="497" height="886" alt="Screenshot 2025-10-08 191343" src="https://github.com/user-attachments/assets/8765e43f-f430-45aa-a764-bd3e09dcfdfe" />
+<img width="454" height="880" alt="Screenshot 2025-10-08 191330" src="https://github.com/user-attachments/assets/21e74990-dd0f-4ea4-bd9a-1a1ce208d64f" />
+<img width="463" height="880" alt="Screenshot 2025-10-08 191319" src="https://github.com/user-attachments/assets/ad1f297d-1f70-42aa-a898-438a6f5a21a4" />
+<img width="487" height="895" alt="Screenshot 2025-10-08 191300" src="https://github.com/user-attachments/assets/9cd05cfb-cd5b-486b-bfa2-f6acebbb4ce4" />
 
 
 ## ✨ Future Improvements

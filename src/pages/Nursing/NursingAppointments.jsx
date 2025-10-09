@@ -112,6 +112,9 @@ const NursingAppointments = () => {
       });
     }
 
+    // Filter by status for Nursing (Only show those who reached the clinic)
+    filtered = filtered.filter(appt => appt.status === 'وصل العيادة');
+
     setFilteredAppointments(filtered);
   }, [appointments, filter, searchQuery]);
 

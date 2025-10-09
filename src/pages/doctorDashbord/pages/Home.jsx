@@ -43,7 +43,7 @@ const Home = () => {
   }
 
   const todayAppointments = appointments
-    .filter(app => app.date.startsWith(today))
+    .filter(app => app.date.startsWith(today) && app.status === 'وصل العيادة')
     .map(app => {
       const patient = patients.find(p => p.id === app.patient_id);
       return {
@@ -55,19 +55,19 @@ const Home = () => {
         }),
         reason: app.reason,
         status: app.status,
-        type: app.type,
+        type: app.visitType, // Changed from type to visitType based on schema
       };
     });
 
   const stats = [
     {
-      title: "المرضى اليوم",
-      value: todayAppointments.length,
+      title: "المرضى بالعيادة",
+      value: appointments.filter(app => app.date.startsWith(today) && app.status === 'وصل العيادة').length,
       icon: <UserPlus className="text-blue-500" />,
     },
     {
-      title: "المواعيد",
-      value: appointments.filter(app => app.status === 'في الإنتظار').length,
+      title: "إجمالي مواعيد اليوم",
+      value: appointments.filter(app => app.date.startsWith(today)).length,
       icon: <CalendarCheck className="text-green-500" />,
     },
   ];

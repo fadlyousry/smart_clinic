@@ -21,8 +21,11 @@ import {
   NursingAppointments,
   NursingPatientsList,
   PatientRecordContainer ,
+  ReceptionAppointments,
+  ReceptionPatientsList,
 } from './lazy';
 import NursingLayout from '../pages/Nursing/NursingLayout';
+import ReceptionLayout from '../pages/Reception/ReceptionLayout';
 
 export const RoutesArray = [
   { id: v4(), element: <Login />, path: '/login' },
@@ -43,6 +46,15 @@ export const RoutesArray = [
     children: [
       { id: v4(), element: <NursingAppointments />, path: '', index: true },
       { id: v4(), element: <NursingPatientsList />, path: 'patients' },
+    ],
+  },
+  {
+    id: v4(),
+    element: <ReceptionLayout />,
+    path: '/reception-dashboard',
+    children: [
+      { id: v4(), element: <ReceptionAppointments />, path: '', index: true },
+      { id: v4(), element: <ReceptionPatientsList />, path: 'patients' },
     ],
   },
   {

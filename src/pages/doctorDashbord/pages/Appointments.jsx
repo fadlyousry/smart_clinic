@@ -56,7 +56,10 @@ const Appointments = () => {
 
 
     const filteredAppointmentsByTab = appointments.filter((app) => {
-        if (activeTab === "today") return app.date === today;
+        if (activeTab === "today") {
+            // Only show patients who have arrived at the clinic for today's list
+            return app.date === today && app.status === "وصل العيادة";
+        }
         if (activeTab === "upcoming") return app.date > today;
         if (activeTab === "past") return app.date < today;
         return false;

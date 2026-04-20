@@ -1,64 +1,74 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { supabase } from '../../../supaBase/ReceptionBooking';
+import React, { useState, useRef, useEffect } from 'react';
+import "./ReceptionTopBar.css";
+import MenuIcon from '@mui/icons-material/Menu';
+import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../../../store/auth';
-import { motion, AnimatePresence } from 'framer-motion';
-import { SidebarToggle } from './SidebarToggle';
-import { PageTitle } from './PageTitle';
-import { UserMenu } from './UserMenu';
+import LogoutIcon from '@mui/icons-material/Logout';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import HomeIcon from '@mui/icons-material/Home';
 
-// Main TopBarContainer component
-export const ReceptionTopBar = ({ toggleSidebar }) => {
-  const [showMenu, setShowMenu] = useState(false);
-  const { CUname, logout } = useAuthStore();
-  const navigate = useNavigate();
-  const location = useLocation();
+function ReceptionTopBar({ toggleSidebar }) {
+    const [showMenu, setShowMenu] = useState(false);
+    const { logout, CUname } = useAuthStore();
+    const navigate = useNavigate();
+    const dropdownRef = useRef(null);
 
-  // Handle logout logic
-  const handleLogout = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error('Error signing out:', error.message);
-        return;
-      }
-      logout();
-      localStorage.removeItem('auth_token');
-      navigate('/login');
-    } catch (err) {
-      console.error('Unexpected error during logout:', err);
-    }
-    setShowMenu(false);
-  };
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    };
+    
+    const handleGoHome = () => {
+        navigate("/");
+    };
 
-  // Handle profile navigation
-  const handleProfile = () => {
-    navigate('/reception-dashboard/profile');
-    setShowMenu(false);
-  };
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setShowMenu(false);
+            }
+        }
+        if (showMenu) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showMenu]);
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-cyan-50 to-blue-50 shadow-md border-b border-gray-100 px-4 py-3 sm:px-6 sm:py-4 flex items-center justify-between"
-      dir="rtl"
-    >
-      {/* Left Section: Sidebar Toggle and Page Title */}
-      <div className="flex items-center gap-3 sm:gap-4">
-        <SidebarToggle toggleSidebar={toggleSidebar} />
-        <PageTitle location={location} />
-      </div>
+    return (
+        <div className="topbar">
+            <button className="burger-btn" onClick={toggleSidebar}>
+                <MenuIcon />
+            </button>
+            <div className="topbar-icons">
+                <div className="relative" ref={dropdownRef}>
+                    <button
+                        className="flex items-center gap-2"
+                        onClick={() => setShowMenu(!showMenu)}
+                    >
+                        <AccountCircleIcon style={{ fontSize: 35, color: '#0097A7' }} />
+                        <span className="user-name">
+                            {CUname() || 'موظف استقبال'}
+                        </span>
+                    </button>
 
-      {/* Right Section: User Menu */}
-      <UserMenu
-        CUname={CUname}
-        showMenu={showMenu}
-        setShowMenu={setShowMenu}
-        handleLogout={handleLogout}
-        handleProfile={handleProfile}
-      />
-    </motion.div>
-  );
-};
+                    {showMenu && (
+                        <div className="dropdown-menu">
+                            <button onClick={handleGoHome}>
+                                <span className="icon text-cyan-700"><HomeIcon /></span> الموقع الرئيسي
+                            </button>
+                            <button onClick={handleLogout}>
+                                <span className="icon text-red-700"><LogoutIcon /></span> تسجيل الخروج
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default ReceptionTopBar;

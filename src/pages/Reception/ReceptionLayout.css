@@ -1,0 +1,17 @@
+.reception-dashboard {
+    display: flex;
+    direction: rtl;
+}
+
+.reception-dashboard .content {
+    flex: 1;
+    margin-right: 240px;
+    background-color: #f5f7f9;
+    min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+    .reception-dashboard .content {
+        margin-right: 0;
+    }
+}

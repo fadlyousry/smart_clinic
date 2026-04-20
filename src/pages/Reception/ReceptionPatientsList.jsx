@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { supabase, addPatient } from '../../supaBase/ReceptionBooking';
 import { Schema } from './receptionBookingSchema';
-import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import { useMediaQuery } from 'react-responsive';
-import { ReceptionTopBar } from './components/ReceptionTopBar';
-import ReceptionSidebar from './components/ReceptionSidebar';
 import { PatientHelmet } from './components/PatientHelmet';
 import { PatientSearchBar } from './components/PatientSearchBar';
 import { PatientListHeader } from './components/PatientListHeader';
@@ -14,8 +11,7 @@ import { PatientCards } from './components/PatientCards';
 import { PatientModal } from './components/PatientModal';
 import { ErrorMessage } from './components/ErrorMessage';
 import { EmptyState } from './components/EmptyState';
-import { motion, AnimatePresence } from 'framer-motion';
-
+import { motion } from 'framer-motion';
 
 const ReceptionPatientsList = () => {
   const [patients, setPatients] = useState([]);
@@ -40,7 +36,6 @@ const ReceptionPatientsList = () => {
   const [formErrors, setFormErrors] = useState({});
   const isTablet = useMediaQuery({ query: '(max-width: 1024px)' });
 
-  // Fetch patients from Supabase
   useEffect(() => {
     const fetchPatients = async () => {
       try {
@@ -52,15 +47,7 @@ const ReceptionPatientsList = () => {
           .order('id', { ascending: true });
 
         if (error) {
-          console.error('Error fetching patients:', error.message, error.details);
           setError(`فشل في جلب المرضى: ${error.message}`);
-          Swal.fire({
-            icon: 'error',
-            title: 'خطأ',
-            text: `فشل في جلب المرضى: ${error.message}`,
-            confirmButtonText: 'حسناً',
-            confirmButtonColor: '#d33',
-          });
           return;
         }
 
@@ -68,22 +55,13 @@ const ReceptionPatientsList = () => {
         setFilteredPatients(data || []);
         setError(null);
       } catch (err) {
-        console.error('Unexpected error fetching patients:', err);
         setError('حدث خطأ غير متوقع أثناء جلب المرضى.');
-        Swal.fire({
-          icon: 'error',
-          title: 'خطأ',
-          text: 'حدث خطأ غير متوقع أثناء جلب المرضى.',
-          confirmButtonText: 'حسناً',
-          confirmButtonColor: '#d33',
-        });
       }
     };
 
     fetchPatients();
   }, []);
 
-  // Handle search
   useEffect(() => {
     const filtered = patients.filter(
       patient =>
@@ -94,14 +72,12 @@ const ReceptionPatientsList = () => {
     setFilteredPatients(filtered);
   }, [searchTerm, patients]);
 
-  // Handle form input changes
   const handleChange = e => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     setFormErrors(prev => ({ ...prev, [name]: '' }));
   };
 
-  // Open edit modal with patient data
   const openEditModal = patient => {
     setCurrentPatient(patient);
     setFormData({
@@ -120,7 +96,6 @@ const ReceptionPatientsList = () => {
     setShowEditModal(true);
   };
 
-  // Add or update patient in Supabase
   const handlePatientSubmit = async () => {
     try {
       const editSchema = Schema.omit(['amount', 'appointmentDateTime']);
@@ -157,72 +132,19 @@ const ReceptionPatientsList = () => {
       };
 
       if (currentPatient) {
-        // Update existing patient
         const { error } = await supabase.from('patients').update(patientData).eq('id', currentPatient.id);
-
-        if (error) {
-          console.error('Error updating patient:', error.message, error.details);
-          Swal.fire({
-            icon: 'error',
-            title: 'خطأ',
-            text: `فشل في تحديث المريض: ${error.message}`,
-            confirmButtonText: 'حسناً',
-            confirmButtonColor: '#d33',
-          });
-          return;
-        }
+        if (error) throw error;
 
         setPatients(prev => prev.map(p => (p.id === currentPatient.id ? { ...p, ...patientData } : p)));
         setFilteredPatients(prev => prev.map(p => (p.id === currentPatient.id ? { ...p, ...patientData } : p)));
-        Swal.fire({
-          icon: 'success',
-          title: 'تم التحديث',
-          text: 'تم تحديث بيانات المريض بنجاح!',
-          confirmButtonText: 'حسناً',
-          confirmButtonColor: '#3085d6',
-        });
+        Swal.fire({ icon: 'success', title: 'تم التحديث', text: 'تم تحديث بيانات المريض بنجاح!' });
       } else {
-        // Add new patient
         const success = await addPatient(patientData, () => {
-          setFormData({
-            fullName: '',
-            age: '',
-            phoneNumber: '',
-            address: '',
-            bookingDate: '',
-            visitType: '',
-            notes: '',
-            chronic_diseases: '',
-            gender: '',
-            email: '',
-            blood: '',
-          });
+          setFormData({ fullName: '', age: '', phoneNumber: '', address: '', bookingDate: '', visitType: '', notes: '', chronic_diseases: '', gender: '', email: '', blood: '' });
         });
 
         if (success) {
-          // Fetch the newly added patient to get the full data including ID
-          const { data: newPatient, error: fetchError } = await supabase
-            .from('patients')
-            .select(
-              'id, fullName, age, phoneNumber, address, bookingDate, visitType, notes, chronic_diseases, gender, email, blood'
-            )
-            .eq('phoneNumber', patientData.phoneNumber)
-            .order('id', { ascending: false })
-            .limit(1)
-            .single();
-
-          if (fetchError) {
-            console.error('Error fetching new patient:', fetchError.message, fetchError.details);
-            Swal.fire({
-              icon: 'error',
-              title: 'خطأ',
-              text: `فشل في جلب بيانات المريض الجديد: ${fetchError.message}`,
-              confirmButtonText: 'حسناً',
-              confirmButtonColor: '#d33',
-            });
-            return;
-          }
-
+          const { data: newPatient } = await supabase.from('patients').select('*').eq('phoneNumber', patientData.phoneNumber).order('id', { ascending: false }).limit(1).single();
           setPatients(prev => [...prev, newPatient]);
           setFilteredPatients(prev => [...prev, newPatient]);
         }
@@ -233,24 +155,12 @@ const ReceptionPatientsList = () => {
     } catch (err) {
       if (err.name === 'ValidationError') {
         const errors = {};
-        err.inner.forEach(error => {
-          errors[error.path] = error.message;
-        });
+        err.inner.forEach(error => { errors[error.path] = error.message; });
         setFormErrors(errors);
-      } else {
-        console.error('Unexpected error handling patient:', err);
-        Swal.fire({
-          icon: 'error',
-          title: 'خطأ',
-          text: 'حدث خطأ غير متوقع أثناء معالجة بيانات المريض.',
-          confirmButtonText: 'حسناً',
-          confirmButtonColor: '#d33',
-        });
       }
     }
   };
 
-  // Delete patient from Supabase
   const deletePatient = async id => {
     const result = await Swal.fire({
       title: 'تأكيد الحذف',
@@ -260,123 +170,62 @@ const ReceptionPatientsList = () => {
       confirmButtonText: 'نعم، احذف',
       cancelButtonText: 'إلغاء',
       confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
     });
 
     if (!result.isConfirmed) return;
 
     try {
-      const { error: appointmentError } = await supabase.from('appointments').delete().eq('patient_id', id);
-
-      if (appointmentError) {
-        console.error('Error deleting associated appointments:', appointmentError.message, appointmentError.details);
-        Swal.fire({
-          icon: 'error',
-          title: 'خطأ',
-          text: `فشل في حذف المواعيد المرتبطة: ${appointmentError.message}`,
-          confirmButtonText: 'حسناً',
-          confirmButtonColor: '#d33',
-        });
-        return;
-      }
-
-      const { error: patientError } = await supabase.from('patients').delete().eq('id', id);
-
-      if (patientError) {
-        console.error('Error deleting patient:', patientError.message, patientError.details);
-        Swal.fire({
-          icon: 'error',
-          title: 'خطأ',
-          text: `فشل في حذف المريض: ${patientError.message}`,
-          confirmButtonText: 'حسناً',
-          confirmButtonColor: '#d33',
-        });
-        return;
-      }
-
+      await supabase.from('appointments').delete().eq('patient_id', id);
+      await supabase.from('patients').delete().eq('id', id);
       setPatients(prev => prev.filter(p => p.id !== id));
       setFilteredPatients(prev => prev.filter(p => p.id !== id));
-      Swal.fire({
-        icon: 'success',
-        title: 'تم الحذف',
-        text: 'تم حذف المريض وجميع مواعيده بنجاح!',
-        confirmButtonText: 'حسناً',
-        confirmButtonColor: '#3085d6',
-      });
+      Swal.fire({ icon: 'success', title: 'تم الحذف', text: 'تم حذف المريض بنجاح!' });
     } catch (err) {
-      console.error('Unexpected error deleting patient:', err);
-      Swal.fire({
-        icon: 'error',
-        title: 'خطأ',
-        text: 'حدث خطأ غير متوقع أثناء حذف المريض.',
-        confirmButtonText: 'حسناً',
-        confirmButtonColor: '#d33',
-      });
+       Swal.fire({ icon: 'error', title: 'خطأ', text: 'حدث خطأ أثناء الحذف.' });
     }
   };
 
   return (
-    <div className="min-h-screen w-full pt-16 bg-gradient-to-br from-cyan-50 to-blue-50" dir="rtl">
+    <div className="p-4 sm:p-6" dir="rtl">
       <PatientHelmet />
-      <div className="flex flex-col lg:flex-row">
-        <ReceptionTopBar />
-        <div className="w-full lg:w-64 lg:min-h-screen">
-          <ReceptionSidebar />
-        </div>
-        <main className="flex-1 p-4 sm:p-6 w-full">
-          <nav className="bg-white p-3 mb-4 rounded-lg shadow-sm lg:hidden">
-            <button
-              className="text-gray-700"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#sidebarMenu"
-              aria-controls="sidebarMenu"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="inline-block w-6 h-6 bg-[url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 30 30%27%3E%3Cpath stroke=%27rgba(0, 0, 0, 0.5)%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-miterlimit=%2710%27 d=%27M4 7h22M4 15h22M4 23h22%27/%3E%3C/svg%3E')] bg-no-repeat bg-center" />
-            </button>
-          </nav>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="bg-white shadow-xl rounded-2xl p-4 sm:p-6 border border-gray-100"
-          >
-            <PatientListHeader />
-            <PatientSearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-            {error && <ErrorMessage error={error} />}
-            {filteredPatients.length === 0 && !error ? (
-              <EmptyState searchTerm={searchTerm} />
-            ) : (
-              <>
-                <PatientTable
-                  filteredPatients={filteredPatients}
-                  isTablet={isTablet}
-                  openEditModal={openEditModal}
-                  deletePatient={deletePatient}
-                />
-                <PatientCards
-                  filteredPatients={filteredPatients}
-                  isTablet={isTablet}
-                  openEditModal={openEditModal}
-                  deletePatient={deletePatient}
-                />
-              </>
-            )}
-          </motion.div>
-          <PatientModal
-            showEditModal={showEditModal}
-            setShowEditModal={setShowEditModal}
-            currentPatient={currentPatient}
-            formData={formData}
-            formErrors={formErrors}
-            handleChange={handleChange}
-            handlePatientSubmit={handlePatientSubmit}
-            setFormErrors={setFormErrors}
-          />
-        </main>
-      </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white shadow-xl rounded-2xl p-4 sm:p-6 border border-gray-100"
+      >
+        <PatientListHeader />
+        <PatientSearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        {error && <ErrorMessage error={error} />}
+        {filteredPatients.length === 0 && !error ? (
+          <EmptyState searchTerm={searchTerm} />
+        ) : (
+          <>
+            <PatientTable
+              filteredPatients={filteredPatients}
+              isTablet={isTablet}
+              openEditModal={openEditModal}
+              deletePatient={deletePatient}
+            />
+            <PatientCards
+              filteredPatients={filteredPatients}
+              isTablet={isTablet}
+              openEditModal={openEditModal}
+              deletePatient={deletePatient}
+            />
+          </>
+        )}
+      </motion.div>
+      <PatientModal
+        showEditModal={showEditModal}
+        setShowEditModal={setShowEditModal}
+        currentPatient={currentPatient}
+        formData={formData}
+        formErrors={formErrors}
+        handleChange={handleChange}
+        handlePatientSubmit={handlePatientSubmit}
+        setFormErrors={setFormErrors}
+      />
     </div>
   );
 };

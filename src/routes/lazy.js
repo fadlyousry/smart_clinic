@@ -12,6 +12,7 @@ export const NursingAppointments = lazy(() => import('../pages/Nursing/NursingAp
 export const NursingPatientsList = lazy(() => import('../pages/Nursing/NursingPatientsList.jsx'));
 export const ReceptionAppointments = lazy(() => import('../pages/Reception/ReceptionAppointments.jsx'));
 export const ReceptionPatientsList = lazy(() => import('../pages/Reception/ReceptionPatientsList.jsx'));
+export const ReceptionStatistics = lazy(() => import('../pages/Reception/ReceptionStatistics.jsx'));
 // export const Profile = lazy(() => import('../pages/DoctorProfile/DoctorProfile.jsx'));
 export const PatientView = lazy(() => import('../pages/DoctorProfile/PatientView.jsx'));
 export const DoctorProfile = lazy(() => import('../pages/DoctorProfile/DoctorDashProfile.jsx'));

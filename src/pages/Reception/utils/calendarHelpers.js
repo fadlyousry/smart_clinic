@@ -8,11 +8,11 @@ import { ar } from 'date-fns/locale';
 
 // ─── Doctor Colors ───────────────────────────────────────────
 const DOCTOR_COLORS = [
+  { bg: '#00bcd4', light: '#e0f7fa', name: 'cyan' },
   { bg: '#0D9488', light: '#CCFBF1', name: 'teal' },
   { bg: '#6366F1', light: '#E0E7FF', name: 'indigo' },
   { bg: '#F43F5E', light: '#FFE4E6', name: 'rose' },
-  { bg: '#F59E0B', light: '#FEF3C7', name: 'amber' },
-  { bg: '#8B5CF6', light: '#EDE9FE', name: 'violet' },
+  { bg: '#00bcd4', light: '#e0f7fa', name: 'cyan' },
   { bg: '#EC4899', light: '#FCE7F3', name: 'pink' },
   { bg: '#14B8A6', light: '#D1FAE5', name: 'emerald' },
   { bg: '#3B82F6', light: '#DBEAFE', name: 'blue' },

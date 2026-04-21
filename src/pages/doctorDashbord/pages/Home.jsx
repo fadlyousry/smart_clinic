@@ -42,7 +42,9 @@ const Home = () => {
     return <div className="p-4 text-red-600">لا توجد بيانات متاحة</div>;
   }
 
-  const todayAppointments = appointments
+  const allTodayAppointments = appointments.filter(app => app.date.startsWith(today));
+
+  const todayAppointments = allTodayAppointments
     .filter(app => app.date.startsWith(today) && (app.status === 'في قاعة الانتظار' || app.status === 'في الكشف'))
     .map(app => {
       const patient = patients.find(p => p.id === app.patient_id);
@@ -62,9 +64,9 @@ const Home = () => {
 
   const stats = [
     {
-      title: "المرضى بالعيادة",
-      value: appointments.filter(app => app.date.startsWith(today) && (app.status === 'في قاعة الانتظار' || app.status === 'في الكشف')).length,
-      icon: <UserPlus className="text-blue-500" />,
+      title: "في قاعة الانتظار",
+      value: appointments.filter(app => app.date.startsWith(today) && app.status === 'في قاعة الانتظار').length,
+      icon: <UserPlus className="text-amber-500" />,
     },
     {
       title: "إجمالي مواعيد اليوم",
@@ -75,17 +77,17 @@ const Home = () => {
   const reson = [
     {
       title: "كشف",
-      value: appointments.filter(app => app.visitType === 'فحص' && app.status === 'محجوز').length,
+      value: appointments.filter(app => app.date.startsWith(today) && (app.visitType === 'كشف' || app.visitType === 'فحص')).length,
       icon: <UserPlus className="text-blue-500" />,
     },
     {
-      title: "متابعه",
-      value: appointments.filter(app => app.visitType === 'متابعة' && app.status === 'محجوز').length,
+      title: "متابعة",
+      value: appointments.filter(app => app.date.startsWith(today) && app.visitType === 'متابعة').length,
       icon: <CalendarCheck className="text-yellow-500" />,
     },
     {
-      title: "إستشاره",
-      value: appointments.filter(app => app.visitType === 'إستشارة' && app.status === 'محجوز').length,
+      title: "استشارة",
+      value: appointments.filter(app => app.date.startsWith(today) && (app.visitType === 'استشارة' || app.visitType === 'إستشارة')).length,
       icon: <AlertCircle className="text-green-500" />,
     },
   ];
@@ -116,7 +118,7 @@ const Home = () => {
 
             <AppointmentList appointmentss={todayAppointments} />
             <div className="mt-6 pt-4 border-t border-gray-200">
-              <AppointmentSummary appointments={todayAppointments} />
+              <AppointmentSummary appointments={allTodayAppointments} />
             </div>
           </div>
 

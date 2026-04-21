@@ -154,12 +154,14 @@ const AppointmentCard = memo(({ appt, variant = 'normal', onView, onEdit }) => {
 
       {/* أزرار */}
       <div className="flex items-center justify-end gap-2 mt-3 pt-3 border-t border-gray-50 opacity-0 group-hover:opacity-100 transition-opacity">
-        <button
-          onClick={e => { e.stopPropagation(); onView?.(appt); }}
-          className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 text-xs font-bold transition-all flex items-center gap-1"
-        >
-          <Visibility style={{ fontSize: 14 }} /> عرض
-        </button>
+        {onView && (
+          <button
+            onClick={e => { e.stopPropagation(); onView(appt); }}
+            className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 text-xs font-bold transition-all flex items-center gap-1"
+          >
+            <Visibility style={{ fontSize: 14 }} /> عرض
+          </button>
+        )}
         {onEdit && (
           <button
             onClick={e => { e.stopPropagation(); onEdit(appt); }}

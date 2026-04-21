@@ -50,7 +50,7 @@ export function AppointmentList({ appointmentss }) {
                     <div
                         key={appointment.id}
                         className={`border rounded-2xl p-4 hover:shadow-md transition-shadow bg-white ${
-                            appointment.status === 'في الكشف' ? 'border-purple-300 ring-2 ring-purple-100' : 'border-gray-100'
+                            appointment.status === 'في الكشف' ? 'border-cyan-300 ring-2 ring-cyan-100' : 'border-gray-100'
                         }`}
                     >
                         <div className="flex justify-between items-start">
@@ -68,7 +68,7 @@ export function AppointmentList({ appointmentss }) {
                                     appointment.status === "في قاعة الانتظار"
                                         ? "bg-amber-100 text-amber-800"
                                         : appointment.status === "في الكشف"
-                                            ? "bg-purple-100 text-purple-800"
+                                            ? "bg-cyan-100 text-cyan-800"
                                             : appointment.status === "تم"
                                                 ? "bg-green-100 text-green-800"
                                                 : appointment.status === "ملغى"
@@ -98,7 +98,8 @@ export function AppointmentList({ appointmentss }) {
                             {/* بدء الكشف — يظهر لما المريض في قاعة الانتظار */}
                             {appointment.status === "في قاعة الانتظار" && (
                                 <button
-                                    className="text-sm text-white px-3 py-1 rounded-2xl bg-emerald-500 hover:bg-emerald-600 transition flex items-center gap-1 mx-1"
+                                    className="text-sm text-white px-3 py-1 rounded-2xl hover:opacity-90 transition flex items-center gap-1 mx-1"
+                                    style={{ backgroundColor: 'var(--color-primary)' }}
                                     onClick={() => handleStartVisit(appointment)}
                                 >
                                     🩺 بدء الكشف
@@ -108,7 +109,8 @@ export function AppointmentList({ appointmentss }) {
                             {/* إنهاء الكشف — يظهر لما المريض في الكشف */}
                             {appointment.status === "في الكشف" && (
                                 <button
-                                    className="text-sm text-white px-3 py-1 rounded-2xl bg-red-500 hover:bg-red-600 transition flex items-center gap-1 mx-1"
+                                    className="text-sm text-white px-3 py-1 rounded-2xl hover:opacity-90 transition flex items-center gap-1 mx-1"
+                                    style={{ backgroundColor: 'var(--color-primary-dark)' }}
                                     onClick={() => handleEndVisit(appointment)}
                                 >
                                     ✅ إنهاء الكشف

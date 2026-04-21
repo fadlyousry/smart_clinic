@@ -32,7 +32,7 @@ const AppointmentTableRow = ({ appointment, onViewDetails, onReceivePatient, onE
             appointment.status === "في قاعة الانتظار"
               ? "bg-amber-100 text-amber-800"
               : appointment.status === "في الكشف"
-                ? "bg-purple-100 text-purple-800"
+                ? "bg-cyan-100 text-cyan-800"
                 : appointment.status === "تم"
                   ? "bg-green-100 text-green-800"
                   : appointment.status === "ملغى"
@@ -52,7 +52,8 @@ const AppointmentTableRow = ({ appointment, onViewDetails, onReceivePatient, onE
           {onReceivePatient && appointment.status === "في قاعة الانتظار" && (
             <button
               onClick={() => onReceivePatient(appointment)}
-              className="flex items-center gap-1 px-3 py-1.5 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors text-xs font-medium"
+              className="flex items-center gap-1 px-3 py-1.5 text-white rounded-lg hover:opacity-90 transition-colors text-xs font-medium"
+              style={{ backgroundColor: 'var(--color-primary)' }}
             >
               <UserCheck size={14} />
               استقبال
@@ -62,7 +63,8 @@ const AppointmentTableRow = ({ appointment, onViewDetails, onReceivePatient, onE
           {onEndExam && appointment.status === "في الكشف" && (
             <button
               onClick={() => onEndExam(appointment)}
-              className="flex items-center gap-1 px-3 py-1.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-xs font-medium"
+              className="flex items-center gap-1 px-3 py-1.5 text-white rounded-lg hover:opacity-90 transition-colors text-xs font-medium"
+              style={{ backgroundColor: 'var(--color-primary-dark)' }}
             >
               <CheckCircle size={14} />
               إنهاء الكشف

@@ -8,8 +8,8 @@ import MonthlyView from '../../Reception/components/calendar/MonthlyView';
 import WeeklyView from '../../Reception/components/calendar/WeeklyView';
 import DailyTimeline from '../../Reception/components/calendar/DailyTimeline';
 import EnhancedListView from '../../Reception/components/calendar/EnhancedListView';
+import CalendarToolbar from '../../Reception/components/calendar/CalendarToolbar';
 import { calculateStats, navigateDate } from '../../Reception/utils/calendarHelpers';
-import { CalendarDays, List, Clock, LayoutGrid } from 'lucide-react';
 
 const DoctorCalendar = () => {
   const { CUdoctorId } = useAuthStore();
@@ -20,7 +20,7 @@ const DoctorCalendar = () => {
   const appointments = useDoctorDashboardStore((state) => state.appointments);
   const fetchData = useDoctorDashboardStore((state) => state.fetchData);
 
-  const [viewMode, setViewMode] = useState('month');
+  const [viewMode, setViewMode] = useState('week');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -88,8 +88,6 @@ const DoctorCalendar = () => {
     const commonProps = {
       selectedDate,
       appointments: doctorAppointments,
-      onView: handleView,
-      onEdit: handleEdit,
     };
 
     switch (viewMode) {
@@ -106,48 +104,21 @@ const DoctorCalendar = () => {
     }
   };
 
-  const viewModes = [
-    { key: 'month', label: 'شهري', icon: CalendarDays },
-    { key: 'week', label: 'أسبوعي', icon: LayoutGrid },
-    { key: 'day', label: 'يومي', icon: Clock },
-    { key: 'list', label: 'قائمة', icon: List },
-  ];
+
 
   return (
     <div className="p-4 sm:p-6 flex flex-col gap-4" dir="rtl" style={{ height: 'calc(100vh - 80px)' }}>
-      {/* العنوان */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <h2 className="text-xl font-bold text-gray-800">📅 تقويم المواعيد</h2>
-        
-        <div className="flex items-center gap-2">
-          {/* بحث */}
-          <input
-            type="text"
-            placeholder="بحث عن مريض..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 w-48"
-          />
-          
-          {/* أزرار العرض */}
-          <div className="flex bg-gray-100 rounded-lg p-1 gap-1">
-            {viewModes.map(({ key, label, icon: Icon }) => (
-              <button
-                key={key}
-                onClick={() => setViewMode(key)}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
-                  viewMode === key
-                    ? 'bg-white text-cyan-700 shadow-sm'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-                title={label}
-              >
-                <Icon size={14} />
-                <span className="hidden sm:inline">{label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+        <h2 className="text-xl font-bold text-gray-800"> تقويم المواعيد</h2>
+
+      {/* شريط الأدوات */}
+      <CalendarToolbar
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        searchPlaceholder="بحث عن مريض..."
+      />
       </div>
 
       {/* الإحصائيات */}

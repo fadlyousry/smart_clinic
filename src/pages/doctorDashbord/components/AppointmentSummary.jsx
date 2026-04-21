@@ -1,7 +1,8 @@
-﻿const statuses = [
+const statuses = [
+    { label: "في قاعة الانتظار", color: "bg-amber-500" },
+    { label: "في الكشف", color: "bg-cyan-600" },
     { label: "تم", color: "bg-green-500" },
-    { label: "محجوز", color: "bg-yellow-500" },
-    { label: "ملغي", color: "bg-red-500" },
+    { label: "ملغى", color: "bg-red-500" },
 ];
 
 export const AppointmentSummary = ({ appointments }) => {
@@ -21,4 +22,3 @@ export const AppointmentSummary = ({ appointments }) => {
             </div>
     );
 };
-

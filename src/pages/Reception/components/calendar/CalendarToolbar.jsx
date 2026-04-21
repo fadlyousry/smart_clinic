@@ -26,18 +26,21 @@ const CalendarToolbar = ({
   setFilters,
   doctors,
   filteredCount,
+  searchPlaceholder = "بحث بالاسم أو الموبايل أو الدكتور...",
 }) => {
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
       {/* زر إضافة موعد */}
-      <button
-        onClick={onAddAppointment}
-        className="px-5 py-2.5 text-white font-bold rounded-xl shadow-lg transition-all hover:brightness-110 active:scale-95 flex items-center justify-center gap-2 text-sm shrink-0"
-        style={{ backgroundColor: 'var(--color-primary)' }}
-      >
-        <Add fontSize="small" />
-        موعد جديد
-      </button>
+      {onAddAppointment && (
+        <button
+          onClick={onAddAppointment}
+          className="px-5 py-2.5 text-white font-bold rounded-xl shadow-lg transition-all hover:brightness-110 active:scale-95 flex items-center justify-center gap-2 text-sm shrink-0"
+          style={{ backgroundColor: 'var(--color-primary)' }}
+        >
+          <Add fontSize="small" />
+          موعد جديد
+        </button>
+      )}
 
       {/* بحث */}
       <div className="relative flex-1 max-w-md">
@@ -48,7 +51,7 @@ const CalendarToolbar = ({
           type="text"
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
-          placeholder="بحث بالاسم أو الموبايل أو الدكتور..."
+          placeholder={searchPlaceholder}
           className="w-full pr-10 pl-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-light)] transition-all"
         />
       </div>

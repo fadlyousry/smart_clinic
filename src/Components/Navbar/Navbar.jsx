@@ -263,14 +263,32 @@ export default function Navbar() {
                               </NavLink>
                             )}
 
-                            {CUrole() == 'doctor' ? (
+                            {CUrole() === 'doctor' ? (
                               <NavLink
                                 className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                                 to="/DoctorDashboard"
                                 onClick={handleNavClick}
                               >
-                                <i className="fa-solid fa-file-medical ml-3"></i>
-                                صفحة الدكتور
+                                <i className="fa-solid fa-file-medical ml-3 text-[var(--color-primary)]"></i>
+                                لوحة تحكم الطبيب
+                              </NavLink>
+                            ) : CUrole() === 'reception' ? (
+                              <NavLink
+                                className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                                to="/reception-dashboard"
+                                onClick={handleNavClick}
+                              >
+                                <i className="fa-solid fa-desktop ml-3 text-[var(--color-primary)]"></i>
+                                لوحة تحكم الاستقبال
+                              </NavLink>
+                            ) : CUrole() === 'nurse' ? (
+                              <NavLink
+                                className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                                to="/nursing-dashboard"
+                                onClick={handleNavClick}
+                              >
+                                <i className="fa-solid fa-user-nurse ml-3 text-[var(--color-primary)]"></i>
+                                لوحة تحكم التمريض
                               </NavLink>
                             ) : (
                               <NavLink
@@ -278,7 +296,7 @@ export default function Navbar() {
                                 to="/patient-record"
                                 onClick={handleNavClick}
                               >
-                                <i className="fa-solid fa-file-medical ml-3"></i>
+                                <i className="fa-solid fa-file-medical ml-3 text-[var(--color-primary)]"></i>
                                 السجل المرضي
                               </NavLink>
                             )}
@@ -449,14 +467,32 @@ export default function Navbar() {
                         </NavLink>
                       )}
 
-                      {CUrole() == 'doctor' ? (
+                      {CUrole() === 'doctor' ? (
                         <NavLink
                           className="block text-lg text-white py-3 px-2 rounded hover:bg-cyan-400 transition-colors"
                           to="/DoctorDashboard"
                           onClick={handleNavClick}
                         >
                           <i className="fa-solid fa-file-medical ml-3"></i>
-                          صفحة الدكتور
+                          لوحة تحكم الطبيب
+                        </NavLink>
+                      ) : CUrole() === 'reception' ? (
+                        <NavLink
+                          className="block text-lg text-white py-3 px-2 rounded hover:bg-cyan-400 transition-colors"
+                          to="/reception-dashboard"
+                          onClick={handleNavClick}
+                        >
+                          <i className="fa-solid fa-desktop ml-3"></i>
+                          لوحة تحكم الاستقبال
+                        </NavLink>
+                      ) : CUrole() === 'nurse' ? (
+                        <NavLink
+                          className="block text-lg text-white py-3 px-2 rounded hover:bg-cyan-400 transition-colors"
+                          to="/nursing-dashboard"
+                          onClick={handleNavClick}
+                        >
+                          <i className="fa-solid fa-user-nurse ml-3"></i>
+                          لوحة تحكم التمريض
                         </NavLink>
                       ) : (
                         <NavLink

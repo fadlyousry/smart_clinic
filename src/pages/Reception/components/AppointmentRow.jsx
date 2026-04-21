@@ -1,9 +1,18 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Delete, Visibility, CheckCircle } from '@mui/icons-material';
+
+import { Delete, Visibility, CheckCircle, Edit, AttachMoney } from '@mui/icons-material';
 import Swal from 'sweetalert2';
 
-export const AppointmentRow = ({ appt, index, isDragging, drag, drop, isMobile, setIsExpanded, deleteAppointment, updateAppointment }) => {
+export const AppointmentRow = ({ 
+  appt, 
+  index, 
+  isMobile, 
+  onView, 
+  onEdit,
+  deleteAppointment, 
+  updateAppointment,
+  togglePaymentStatus
+}) => {
   const handleDelete = async () => {
     const result = await Swal.fire({
       title: 'تأكيد الحذف',
@@ -44,133 +53,134 @@ export const AppointmentRow = ({ appt, index, isDragging, drag, drop, isMobile, 
   };
 
   return (
-    <motion.tr
-      ref={node => drag(drop(node))}
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.05 }}
-      whileHover={{
-        scale: 1.01,
-        backgroundColor: 'rgba(236, 253, 245, 0.5)',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-      }}
-      className={`transition-all duration-200 ${
-        isDragging ? 'opacity-50 bg-gray-100 shadow-lg' : 'opacity-100 hover:bg-gray-50'
-      }`}
+    <tr
+      className="group transition-all duration-300 border-b border-gray-100 opacity-100"
     >
       {!isMobile && (
-        <td className="cursor-move py-4">
-          <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} className="inline-block">
-            <i className="bi bi-grip-vertical me-2 text-gray-400"></i>
-          </motion.div>
-          <span className="font-medium bg-cyan-100 text-cyan-800 px-2 py-1 rounded-full text-sm">{index + 1}</span>
-        </td>
-      )}
-      <td className="py-4">
-        <motion.div whileHover={{ x: -3 }} className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center">
-            <span className="text-blue-800 font-medium text-sm">{appt.patientName?.charAt(0) || 'N/A'}</span>
+        <td className="py-4 pr-6">
+          <div className="flex items-center gap-3">
+             <div className="relative">
+                <div 
+                  className="w-10 h-10 rounded-xl shadow-md flex items-center justify-center transform group-hover:scale-110 transition-transform"
+                  style={{ background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-dark))' }}
+                >
+                  <span className="text-white font-black text-lg">{index + 1}</span>
+                </div>
+                <div 
+                  className="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full border-2"
+                  style={{ borderColor: 'var(--color-primary)' }}
+                ></div>
+             </div>
           </div>
-          <span className="font-medium text-gray-800">{appt.patientName || 'غير متوفر'}</span>
-        </motion.div>
-      </td>
-      {!isMobile && (
-        <td className="py-4">
-          <motion.span
-            whileHover={{ scale: 1.05 }}
-            className="badge bg-gradient-to-br from-blue-50 to-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm shadow-sm flex items-center gap-1"
-          >
-            <i className="bi bi-heart-pulse text-blue-500"></i>
-            {appt.doctorName || 'غير محدد'}
-          </motion.span>
         </td>
       )}
       <td className="py-4">
-        <motion.span
-          whileHover={{ scale: 1.05 }}
-          className={`badge px-3 py-1 rounded-full text-sm shadow-sm flex items-center gap-1 ${
-            appt.status === 'في الإنتظار'
-              ? 'bg-gradient-to-br from-yellow-50 to-yellow-100 text-yellow-800'
-              : appt.status === 'وصل العيادة'
-              ? 'bg-gradient-to-br from-blue-50 to-blue-100 text-blue-800'
-              : appt.status === 'ملغى'
-              ? 'bg-gradient-to-br from-red-50 to-red-100 text-red-800'
-              : 'bg-gradient-to-br from-green-50 to-green-100 text-green-800'
-          }`}
-        >
-          <i
-            className={`bi bi-${
-              appt.status === 'في الإنتظار' ? 'clock' : appt.status === 'وصل العيادة' ? 'person-check' : appt.status === 'ملغى' ? 'x-circle' : 'check-circle'
-            }`}
-          ></i>
-          {appt.status || 'غير محدد'}
-        </motion.span>
-      </td>
-      {!isMobile && (
-        <td className="py-4">
-          <motion.div whileHover={{ scale: 1.05 }}>
-            <span className="text-gray-700 bg-gray-100 px-3 py-1 rounded-full text-sm">
-              {appt.date ? new Date(appt.date).toLocaleDateString('ar-EG') : 'غير متوفر'}
-            </span>
-          </motion.div>
-        </td>
-      )}
-      {!isMobile && (
-        <td className="py-4">
-          <motion.div whileHover={{ scale: 1.05 }}>
-            <span className="text-gray-700 bg-gray-100 px-3 py-1 rounded-full text-sm">
-              {appt.visitType || 'غير محدد'}
-            </span>
-          </motion.div>
-        </td>
-      )}
-      <td className="py-4">
-        <motion.span
-          whileHover={{ scale: 1.05 }}
-          className={`badge px-3 py-1 rounded-full text-sm shadow-sm flex items-center gap-1 ${
-            appt.payment
-              ? 'bg-gradient-to-br from-green-50 to-green-100 text-green-800'
-              : 'bg-gradient-to-br from-red-50 to-red-100 text-red-800'
-          }`}
-        >
-          <i className={`bi bi-${appt.payment ? 'check-circle' : 'x-circle'}`}></i>
-          {appt.payment ? 'مدفوع' : 'غير مدفوع'}
-        </motion.span>
-      </td>
-      <td className="py-4">
-        <div className="flex gap-2">
-          <motion.button
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setIsExpanded(prev => !prev)}
-            className="p-2 rounded-full text-blue-600 hover:bg-blue-50 transition-colors"
-          >
-            <Visibility fontSize="small" />
-          </motion.button>
-          
-          {appt.status === 'في الإنتظار' && (
-            <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleCheckIn}
-              className="btn btn-sm bg-gradient-to-br from-emerald-500 to-emerald-600 text-white hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-sm flex items-center gap-1"
-            >
-              <CheckCircle fontSize="small" />
-              {isMobile ? '' : 'وصل'}
-            </motion.button>
-          )}
-
-          <motion.button
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleDelete}
-            className="btn btn-sm bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-sm flex items-center gap-1"
-          >
-            <Delete fontSize="small" />
-            {isMobile ? '' : 'حذف'}
-          </motion.button>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center border-2 border-white shadow-sm overflow-hidden">
+            <span className="text-slate-600 font-bold">{appt.patientName?.charAt(0) || 'P'}</span>
+          </div>
+          <div>
+            <p className="font-bold text-gray-800 group-hover:text-[var(--color-primary-dark)] transition-colors">{appt.patientName || 'غير متوفر'}</p>
+            <p className="text-xs text-gray-400">{appt.phoneNumber}</p>
+          </div>
         </div>
       </td>
-    </motion.tr>
+      {!isMobile && (
+        <td className="py-4">
+          <div className="flex items-center gap-2 text-gray-600">
+            <div 
+              className="w-8 h-8 rounded-lg flex items-center justify-center"
+              style={{ backgroundColor: 'var(--color-primary-light)', color: 'var(--color-primary-dark)' }}
+            >
+              <i className="bi bi-person-badge"></i>
+            </div>
+            <span className="text-sm font-medium">{appt.doctorName || 'غير محدد'}</span>
+          </div>
+        </td>
+      )}
+      <td className="py-4 text-center">
+        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold shadow-sm transition-all ${
+          appt.status === 'في الإنتظار'
+            ? 'bg-amber-50 text-amber-700 border border-amber-100'
+            : appt.status === 'وصل العيادة'
+            ? 'bg-blue-50 text-blue-700 border border-blue-100'
+            : appt.status === 'ملغى'
+            ? 'bg-rose-50 text-rose-700 border border-rose-100'
+            : 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+        }`}>
+          <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${
+             appt.status === 'في الإنتظار' ? 'bg-amber-500' : 
+             appt.status === 'وصل العيادة' ? 'bg-blue-500' : 
+             appt.status === 'ملغى' ? 'bg-rose-500' : 'bg-emerald-500'
+          }`}></div>
+          {appt.status || 'غير محدد'}
+        </span>
+      </td>
+      {!isMobile && (
+        <td className="py-4">
+          <span className="text-xs font-bold text-gray-500 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+            {appt.date ? new Date(appt.date).toLocaleDateString('ar-EG') : 'N/A'}
+          </span>
+        </td>
+      )}
+      {!isMobile && (
+        <td className="py-4">
+           <span className="text-xs font-bold text-slate-600">
+             {appt.visitType === 'فحص' ? 'كشف' : appt.visitType}
+           </span>
+        </td>
+      )}
+      <td className="py-4">
+        <span 
+          className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
+            appt.payment ? 'text-white' : 'bg-slate-100 text-slate-500'
+          }`}
+          style={appt.payment ? { backgroundColor: 'var(--color-primary)', boxShadow: '0 4px 10px -2px var(--color-primary)' } : {}}
+        >
+          {appt.payment ? 'PAID' : 'UNPAID'}
+        </span>
+      </td>
+      <td className="py-4 pl-6">
+        <div className="flex justify-end items-center gap-2">
+          {/* View Button */}
+          <button
+            onClick={() => onView(appt)}
+            className="p-2.5 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all shadow-sm border border-blue-100"
+            title="عرض التفاصيل"
+          >
+            <Visibility fontSize="small" />
+          </button>
+
+          {/* Edit Button */}
+          <button
+            onClick={() => onEdit(appt)}
+            className="p-2.5 rounded-xl bg-[var(--color-primary-light)]/40 text-[var(--color-primary-dark)] hover:bg-[var(--color-primary-light)] transition-all shadow-sm border border-[var(--color-primary-light)]"
+            title="تعديل الحجز"
+          >
+            <Edit fontSize="small" />
+          </button>
+          
+          {/* Check-in Action */}
+          {appt.status === 'في الإنتظار' && (
+            <button
+              onClick={handleCheckIn}
+              className="px-4 py-2 text-white rounded-xl shadow-lg transition-all font-black text-xs h-[42px] hover:brightness-110 active:scale-95"
+              style={{ backgroundColor: 'var(--color-primary)' }}
+            >
+              وصل
+            </button>
+          )}
+
+          {/* Delete Button */}
+          <button
+            onClick={handleDelete}
+            className="p-2.5 rounded-xl bg-rose-50 text-rose-500 hover:bg-rose-100 transition-all shadow-sm border border-rose-100"
+            title="حذف"
+          >
+            <Delete fontSize="small" />
+          </button>
+        </div>
+      </td>
+    </tr>
   );
 };

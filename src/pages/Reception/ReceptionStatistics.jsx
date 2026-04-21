@@ -4,7 +4,7 @@ import useAppointmentStore from '../../store/appointmentStore';
 import { AppointmentCharts } from './components/AppointmentCharts';
 import { AppointmentStats } from './components/AppointmentStats';
 import { useMediaQuery } from 'react-responsive';
-import { motion } from 'framer-motion';
+
 import { Activity } from 'lucide-react';
 
 const ReceptionStatistics = () => {
@@ -136,11 +136,7 @@ const ReceptionStatistics = () => {
           </span>
         </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+      <div>
         <AppointmentStats getChartData={getChartData} />
         <AppointmentCharts
           lineChartRef={lineChartRef}
@@ -150,7 +146,7 @@ const ReceptionStatistics = () => {
           getChartData={getChartData}
           isMobile={isMobile}
         />
-      </motion.div>
+      </div>
     </div>
   );
 };

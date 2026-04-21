@@ -1,16 +1,13 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+
 import { Edit, Delete } from '@mui/icons-material';
 import Swal from 'sweetalert2';
 
 export const PatientCards = ({ filteredPatients, isTablet, openEditModal, deletePatient }) => (
   <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
     {filteredPatients.map(patient => (
-      <motion.div
+      <div
         key={patient.id}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
         className="bg-white p-4 rounded-lg shadow-md border border-gray-100"
       >
         <div className="flex justify-between items-start">
@@ -19,17 +16,13 @@ export const PatientCards = ({ filteredPatients, isTablet, openEditModal, delete
             <p className="text-sm text-gray-500">رقم: {patient.id}</p>
           </div>
           <div className="flex gap-2">
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+            <button
               className="p-2 rounded-full text-orange-600 hover:bg-orange-50 transition-colors"
               onClick={() => openEditModal(patient)}
             >
               <Edit />
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+            </button>
+            <button
               className="p-2 rounded-full text-red-600 hover:bg-red-50 transition-colors"
               onClick={async () => {
                 const result = await Swal.fire({
@@ -55,7 +48,7 @@ export const PatientCards = ({ filteredPatients, isTablet, openEditModal, delete
               }}
             >
               <Delete />
-            </motion.button>
+            </button>
           </div>
         </div>
         <div className="mt-3 text-sm text-gray-600 space-y-1">
@@ -73,7 +66,7 @@ export const PatientCards = ({ filteredPatients, isTablet, openEditModal, delete
             </>
           )}
         </div>
-      </motion.div>
+      </div>
     ))}
   </div>
 );

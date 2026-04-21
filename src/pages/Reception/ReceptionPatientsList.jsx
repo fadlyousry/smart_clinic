@@ -11,7 +11,7 @@ import { PatientCards } from './components/PatientCards';
 import { PatientModal } from './components/PatientModal';
 import { ErrorMessage } from './components/ErrorMessage';
 import { EmptyState } from './components/EmptyState';
-import { motion } from 'framer-motion';
+
 
 const ReceptionPatientsList = () => {
   const [patients, setPatients] = useState([]);
@@ -65,9 +65,9 @@ const ReceptionPatientsList = () => {
   useEffect(() => {
     const filtered = patients.filter(
       patient =>
-        patient.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        patient.phoneNumber.includes(searchTerm) ||
-        patient.email.toLowerCase().includes(searchTerm.toLowerCase())
+        (patient.fullName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (patient.phoneNumber || '').includes(searchTerm) ||
+        (patient.email || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredPatients(filtered);
   }, [searchTerm, patients]);
@@ -98,7 +98,7 @@ const ReceptionPatientsList = () => {
 
   const handlePatientSubmit = async () => {
     try {
-      const editSchema = Schema.omit(['amount', 'appointmentDateTime']);
+      const editSchema = Schema.omit(['amount', 'appointmentDateTime', 'visitType']);
       await editSchema.validate(
         {
           ...formData,
@@ -188,34 +188,34 @@ const ReceptionPatientsList = () => {
   return (
     <div className="p-4 sm:p-6" dir="rtl">
       <PatientHelmet />
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="bg-white shadow-xl rounded-2xl p-4 sm:p-6 border border-gray-100"
+      <div
+        className="bg-white shadow-xl rounded-2xl p-4 sm:p-6 border border-gray-100 flex flex-col h-[calc(100vh-120px)]"
       >
         <PatientListHeader />
         <PatientSearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        {error && <ErrorMessage error={error} />}
-        {filteredPatients.length === 0 && !error ? (
-          <EmptyState searchTerm={searchTerm} />
-        ) : (
-          <>
-            <PatientTable
-              filteredPatients={filteredPatients}
-              isTablet={isTablet}
-              openEditModal={openEditModal}
-              deletePatient={deletePatient}
-            />
-            <PatientCards
-              filteredPatients={filteredPatients}
-              isTablet={isTablet}
-              openEditModal={openEditModal}
-              deletePatient={deletePatient}
-            />
-          </>
-        )}
-      </motion.div>
+        <div className="flex-1 overflow-y-auto mt-4 custom-scrollbar">
+          {error && <ErrorMessage error={error} />}
+          {filteredPatients.length === 0 && !error ? (
+            <EmptyState searchTerm={searchTerm} />
+          ) : (
+            <>
+              <PatientTable
+                filteredAppointments={filteredPatients}
+                filteredPatients={filteredPatients}
+                isTablet={isTablet}
+                openEditModal={openEditModal}
+                deletePatient={deletePatient}
+              />
+              <PatientCards
+                filteredPatients={filteredPatients}
+                isTablet={isTablet}
+                openEditModal={openEditModal}
+                deletePatient={deletePatient}
+              />
+            </>
+          )}
+        </div>
+      </div>
       <PatientModal
         showEditModal={showEditModal}
         setShowEditModal={setShowEditModal}

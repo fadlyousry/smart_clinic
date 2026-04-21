@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+
 import { Edit, Delete } from '@mui/icons-material';
 
 export const PatientTable = ({ filteredPatients, isTablet, openEditModal, deletePatient }) => (
@@ -27,11 +27,8 @@ export const PatientTable = ({ filteredPatients, isTablet, openEditModal, delete
       </thead>
       <tbody>
         {filteredPatients.map(patient => (
-          <motion.tr
+          <tr
             key={patient.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
             className="border-b border-gray-100 hover:bg-gray-50"
           >
             <td className="px-4 py-3 text-right text-gray-600 text-sm">{patient.id}</td>
@@ -53,25 +50,21 @@ export const PatientTable = ({ filteredPatients, isTablet, openEditModal, delete
             )}
             <td className="px-4 py-3 text-right">
               <div className="flex items-center justify-end gap-2">
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
+                <button
                   className="p-2 rounded-full text-orange-600 hover:bg-orange-50 transition-colors"
                   onClick={() => openEditModal(patient)}
                 >
                   <Edit />
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
+                </button>
+                <button
                   className="p-2 rounded-full text-red-600 hover:bg-red-50 transition-colors"
                   onClick={() => deletePatient(patient.id)}
                 >
                   <Delete />
-                </motion.button>
+                </button>
               </div>
             </td>
-          </motion.tr>
+          </tr>
         ))}
       </tbody>
     </table>

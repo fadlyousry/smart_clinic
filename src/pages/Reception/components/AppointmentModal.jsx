@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Close } from '@mui/icons-material';
+import { 
+  Close, 
+  Phone, 
+  Person, 
+  Home as HomeIcon, 
+  Cake, 
+  Event, 
+  LocalHospital, 
+  MedicalServices, 
+  AttachMoney, 
+  Description, 
+  CheckCircle,
+  Search
+} from '@mui/icons-material';
 import * as Yup from 'yup';
 import { Schema } from '../receptionBookingSchema';
 import Swal from 'sweetalert2';
@@ -15,70 +28,97 @@ export const AppointmentModal = ({
   formErrors,
   setFormErrors,
   doctors,
+  editData,
 }) => {
-  const { addAppointment } = useAppointmentStore();
-  const [isPhoneValidating, setIsPhoneValidating] = useState(false);
+  const { addAppointment, updateAppointment } = useAppointmentStore();
+  const [loading, setLoading] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [isExistingPatient, setIsExistingPatient] = useState(false);
 
-  // Handler to fetch patient data based on phone number
-  const handlePhoneChange = async e => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    setFormErrors(prev => ({ ...prev, [name]: '' }));
+  const normalizeArabic = (str) => {
+    if (!str) return '';
+    return str
+      .replace(/[إأآا]/g, 'ا')
+      .replace(/ة/g, 'ه')
+      .replace(/ى/g, 'ي')
+      .trim();
+  };
 
-    if (value && value.match(/^01[0125][0-9]{8}$/)) {
-      setIsPhoneValidating(true);
-      try {
-        const { data: existingPatient, error } = await supabase
-          .from('patients')
-          .select('id, fullName, address, age')
-          .eq('phoneNumber', value)
-          .single();
+  const formatDateTime = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const offset = date.getTimezoneOffset() * 60000;
+    const localISOTime = new Date(date.getTime() - offset).toISOString().slice(0, 16);
+    return localISOTime;
+  };
 
-        if (error && error.code !== 'PGRST116') {
-          console.error('Error fetching patient by phone:', {
-            message: error.message,
-            details: error.details,
-            hint: error.hint,
-            code: error.code,
-          });
-          Swal.fire({
-            icon: 'error',
-            title: 'خطأ',
-            text: 'فشل في التحقق من رقم الهاتف. حاول مرة أخرى.',
-            confirmButtonText: 'حسناً',
-            confirmButtonColor: '#d33',
-          });
-          return;
-        }
+  useEffect(() => {
+    if (editData) {
+      // Normalize and map legacy or variant names
+      let visitType = editData.visitType || '';
+      const normalized = normalizeArabic(visitType);
+      
+      if (normalized === normalizeArabic('فحص')) visitType = 'كشف';
+      else if (normalized === normalizeArabic('استشارة')) visitType = 'استشارة';
+      else if (normalized === normalizeArabic('متابعة')) visitType = 'متابعة';
+      
+      setFormData({
+        fullName: editData.patientName || '',
+        address: editData.address || '',
+        age: editData.age || '',
+        phoneNumber: editData.phoneNumber || '',
+        visitType: visitType,
+        notes: editData.reason || '',
+        doctor_id: editData.doctor_id || '',
+        appointmentDateTime: formatDateTime(editData.date),
+        status: editData.status || 'في الإنتظار',
+        amount: editData.amount || null,
+        payment: editData.payment || false,
+        patient_id: editData.patient_id || null,
+      });
+      setIsExistingPatient(!!editData.patient_id);
+    }
+  }, [editData, setFormData]);
 
-        if (existingPatient) {
-          setFormData(prev => ({
-            ...prev,
-            fullName: existingPatient.fullName || '',
-            address: existingPatient.address || '',
-            age: existingPatient.age ? String(existingPatient.age) : '',
-            phoneNumber: value,
-          }));
-          setFormErrors({});
-        }
-      } catch (err) {
-        console.error('Unexpected error fetching patient:', err);
-      } finally {
-        setIsPhoneValidating(false);
+  const handleNameChange = async (e) => {
+    const value = e.target.value;
+    setFormData(prev => ({ ...prev, fullName: value }));
+    setFormErrors(prev => ({ ...prev, fullName: '' }));
+    
+    if (value.length > 2) {
+      setIsSearching(true);
+      const { data, error } = await supabase
+        .from('patients')
+        .select('*')
+        .ilike('fullName', `%${value}%`)
+        .limit(5);
+      
+      if (!error && data) {
+        setSearchResults(data);
       }
     } else {
-      // Reset form fields if phone number is cleared or invalid
-      setFormData(prev => ({
-        ...prev,
-        fullName: '',
-        address: '',
-        age: '',
-        phoneNumber: value,
-      }));
+      setSearchResults([]);
+      setIsSearching(false);
     }
   };
 
-  const handleChange = e => {
+  const selectPatient = (patient) => {
+    setFormData(prev => ({
+      ...prev,
+      fullName: patient.fullName,
+      phoneNumber: patient.phoneNumber,
+      address: patient.address || '',
+      age: patient.age ? String(patient.age) : '',
+      patient_id: patient.id
+    }));
+    setIsExistingPatient(true);
+    setSearchResults([]);
+    setIsSearching(false);
+    setFormErrors({});
+  };
+
+  const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -86,72 +126,50 @@ export const AppointmentModal = ({
       ...(name === 'doctor_id' && {
         amount: doctors.find(d => String(d.id) === value)?.fees || null,
       }),
+      // If they change phone/name manually after selecting, clear the patient_link
+      ...((name === 'fullName' || name === 'phoneNumber') && { patient_id: null })
     }));
+    if (name === 'phoneNumber') setIsExistingPatient(false);
     setFormErrors(prev => ({ ...prev, [name]: '' }));
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setLoading(true);
     try {
       await Schema.validate(formData, { abortEarly: false });
 
       const date = formData.appointmentDateTime;
-      const patientData = {
-        fullName: formData.fullName,
-        address: formData.address,
-        age: parseInt(formData.age),
-        phoneNumber: formData.phoneNumber,
-        bookingDate: date,
-        visitType: formData.visitType,
-      };
+      let patientId = formData.patient_id;
 
-      let patientId;
-      try {
-        console.log('Checking for existing patient with phone:', formData.phoneNumber);
-        const { data: existingPatient, error: patientError } = await supabase
+      if (!patientId) {
+        // Double check by phone if not linked
+        const { data: existingPatient } = await supabase
           .from('patients')
           .select('id')
           .eq('phoneNumber', formData.phoneNumber)
           .single();
 
-        if (patientError) {
-          console.error('Error checking existing patient:', {
-            message: patientError.message,
-            details: patientError.details,
-            hint: patientError.hint,
-            code: patientError.code,
-          });
-          if (patientError.code === 'PGRST116') {
-            // No rows returned, proceed to insert new patient
-          } else {
-            throw new Error(`فشل في التحقق من المريض: ${patientError.message}`);
-          }
-        }
-
         if (existingPatient) {
           patientId = existingPatient.id;
         } else {
-          console.log('Inserting new patient:', patientData);
+          const patientData = {
+            fullName: formData.fullName,
+            address: formData.address,
+            age: parseInt(formData.age) || 0,
+            phoneNumber: formData.phoneNumber,
+            bookingDate: date,
+            visitType: formData.visitType,
+          };
           const { data: newPatient, error: insertError } = await supabase
             .from('patients')
             .insert([patientData])
             .select('id')
             .single();
 
-          if (insertError) {
-            console.error('Error inserting patient:', {
-              message: insertError.message,
-              details: insertError.details,
-              hint: insertError.hint,
-              code: insertError.code,
-            });
-            throw new Error(`فشل في إضافة المريض: ${insertError.message}`);
-          }
+          if (insertError) throw new Error(`فشل في إضافة المريض: ${insertError.message}`);
           patientId = newPatient.id;
         }
-      } catch (err) {
-        console.error('Patient query error:', err);
-        throw err;
       }
 
       const appointmentData = {
@@ -162,11 +180,14 @@ export const AppointmentModal = ({
         status: formData.status,
         payment: formData.payment,
         amount: formData.amount ? parseFloat(formData.amount) : null,
-        notes: formData.notes || null,
+        reason: formData.notes || null, // In DB it's 'reason', in form it's 'notes'
       };
 
-      console.log('Adding appointment with data:', appointmentData);
-      await addAppointment(appointmentData);
+      if (editData) {
+        await updateAppointment(editData.id, appointmentData);
+      } else {
+        await addAppointment(appointmentData);
+      }
 
       setShowModal(false);
       setFormData({
@@ -182,16 +203,16 @@ export const AppointmentModal = ({
         amount: null,
         payment: false,
       });
+      setIsExistingPatient(false);
       setFormErrors({});
       Swal.fire({
         icon: 'success',
         title: 'تمت الإضافة',
         text: 'تم إضافة الموعد بنجاح!',
         confirmButtonText: 'حسناً',
-        confirmButtonColor: '#3085d6',
+        confirmButtonColor: 'var(--color-primary)',
       });
     } catch (err) {
-      console.error('Error in handleSubmit:', err);
       if (err instanceof Yup.ValidationError) {
         const errors = {};
         err.inner.forEach(error => {
@@ -202,260 +223,310 @@ export const AppointmentModal = ({
         Swal.fire({
           icon: 'error',
           title: 'خطأ',
-          text: err.message || 'حدث خطأ غير متوقع أثناء إضافة الموعد.',
-          confirmButtonText: 'حسناً',
-          confirmButtonColor: '#d33',
+          text: err.message || 'حدث خطأ غير متوقع.',
         });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <AnimatePresence>
       {showModal && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-        >
+        <div className="fixed inset-0 flex items-center justify-center z-[100] p-4">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            onClick={() => setShowModal(false)}
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+          />
+          
           <motion.div
-            initial={{ scale: 0.9, y: 20 }}
-            animate={{ scale: 1, y: 0 }}
-            exit={{ scale: 0.9, y: 20 }}
-            className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto border border-gray-200"
+            initial={{ scale: 0.95, opacity: 0, y: 10 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.95, opacity: 0, y: 10 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="bg-white w-full max-w-4xl rounded-[2.5rem] shadow-2xl overflow-hidden relative z-50 flex flex-col md:flex-row max-h-[90vh]"
           >
-            <div className="flex justify-between items-center mb-6">
-              <h5 className="text-xl font-bold text-cyan-800">إضافة موعد جديد</h5>
-              <motion.button
-                whileHover={{ rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => {
-                  setShowModal(false);
-                  setFormErrors({});
-                }}
-                className="text-gray-500 hover:text-gray-700 transition-colors duration-200"
+            {/* Branding Section */}
+            <div 
+              className="hidden md:flex md:w-1/3 p-8 flex-col justify-center items-center text-white text-center relative overflow-hidden"
+              style={{ background: 'linear-gradient(135deg, var(--color-primary-dark), var(--color-primary))' }}
+            >
+              <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                 <MedicalServices className="text-[200px] -rotate-12 absolute -top-10 -left-10" />
+              </div>
+              <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
+                <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-3xl flex items-center justify-center mb-6 mx-auto shadow-xl">
+                   <LocalHospital className="text-4xl" />
+                </div>
+                <h2 className="text-3xl font-black mb-4 leading-tight">حجز موعد جديد</h2>
+                <p className="text-white/80 text-sm leading-relaxed">يرجى تسجيل بيانات المريض بعناية لضمان متابعة طبية دقيقة وتجربة انتظار مميزة.</p>
+                
+                {isExistingPatient && (
+                  <div className="mt-8 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20">
+                    <div className="flex items-center justify-center gap-2 mb-2 text-emerald-300">
+                      <CheckCircle fontSize="small" />
+                      <span className="font-bold text-sm">مريض سابق</span>
+                    </div>
+                    <p className="text-[10px] text-white/70">تم التعرف على المريض وربط بياناته بسجله القديم.</p>
+                  </div>
+                )}
+              </motion.div>
+            </div>
+
+            {/* Form Section */}
+            <div className="flex-1 p-6 sm:p-10 overflow-y-auto">
+              <button 
+                onClick={() => setShowModal(false)}
+                className="absolute top-6 left-6 text-gray-400 hover:text-gray-600 transition-colors bg-gray-50 p-2 rounded-full"
               >
                 <Close />
-              </motion.button>
-            </div>
-            <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 gap-4">
-                <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }}>
-                  <label htmlFor="phoneNumber" className="block text-sm font-semibold text-gray-700 mb-2">
-                    رقم الهاتف
-                  </label>
-                  <input
-                    type="text"
-                    className={`w-full p-3 border ${
-                      formErrors.phoneNumber ? 'border-red-300' : 'border-gray-300'
-                    } rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200`}
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    value={formData.phoneNumber}
-                    onChange={handlePhoneChange}
-                    placeholder="01XXXXXXXXX"
-                    required
-                    disabled={isPhoneValidating}
-                  />
-                  {formErrors.phoneNumber && <p className="text-red-600 text-sm mt-1">{formErrors.phoneNumber}</p>}
-                  {isPhoneValidating && <p className="text-gray-600 text-sm mt-1">جاري التحقق من رقم الهاتف...</p>}
-                </motion.div>
-                <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
-                  <label htmlFor="fullName" className="block text-sm font-semibold text-gray-700 mb-2">
-                    الاسم الكامل
-                  </label>
-                  <input
-                    type="text"
-                    className={`w-full p-3 border ${
-                      formErrors.fullName ? 'border-red-300' : 'border-gray-300'
-                    } rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200`}
-                    id="fullName"
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    placeholder="أدخل الاسم الكامل"
-                    required
-                  />
-                  {formErrors.fullName && <p className="text-red-600 text-sm mt-1">{formErrors.fullName}</p>}
-                </motion.div>
-                <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
-                  <label htmlFor="address" className="block text-sm font-semibold text-gray-700 mb-2">
-                    العنوان
-                  </label>
-                  <input
-                    type="text"
-                    className={`w-full p-3 border ${
-                      formErrors.address ? 'border-red-300' : 'border-gray-300'
-                    } rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200`}
-                    id="address"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    placeholder="أدخل العنوان"
-                    required
-                  />
-                  {formErrors.address && <p className="text-red-600 text-sm mt-1">{formErrors.address}</p>}
-                </motion.div>
-                <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
-                  <label htmlFor="age" className="block text-sm font-semibold text-gray-700 mb-2">
-                    العمر
-                  </label>
-                  <input
-                    type="number"
-                    className={`w-full p-3 border ${
-                      formErrors.age ? 'border-red-300' : 'border-gray-300'
-                    } rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200`}
-                    id="age"
-                    name="age"
-                    value={formData.age}
-                    onChange={handleChange}
-                    placeholder="أدخل العمر"
-                    required
-                  />
-                  {formErrors.age && <p className="text-red-600 text-sm mt-1">{formErrors.age}</p>}
-                </motion.div>
-                <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.45 }}>
-                  <label htmlFor="appointmentDateTime" className="block text-sm font-semibold text-gray-700 mb-2">
-                    تاريخ الموعد
-                  </label>
-                  <input
-                    type="date"
-                    className={`w-full p-3 border ${
-                      formErrors.appointmentDateTime ? 'border-red-300' : 'border-gray-300'
-                    } rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200`}
-                    id="appointmentDateTime"
-                    name="appointmentDateTime"
-                    value={formData.appointmentDateTime}
-                    onChange={handleChange}
-                    required
-                  />
-                  {formErrors.appointmentDateTime && (
-                    <p className="text-red-600 text-sm mt-1">{formErrors.appointmentDateTime}</p>
-                  )}
-                </motion.div>
-                <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}>
-                  <label htmlFor="visitType" className="block text-sm font-semibold text-gray-700 mb-2">
-                    نوع الزيارة
-                  </label>
-                  <select
-                    className={`w-full p-3 border ${
-                      formErrors.visitType ? 'border-red-300' : 'border-gray-300'
-                    } rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200`}
-                    id="visitType"
-                    name="visitType"
-                    value={formData.visitType}
-                    onChange={handleChange}
-                    required
+              </button>
+
+              <form onSubmit={handleSubmit} className="space-y-6 pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 text-right" dir="rtl">
+                  
+                  {/* Name Input with Autocomplete */}
+                  <div className="md:col-span-2 relative">
+                    <label className="block text-sm font-bold text-gray-700 mb-2 mr-1">اسم المريض</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[var(--color-primary)]">
+                        <Person />
+                      </div>
+                      <input
+                        type="text"
+                        name="fullName"
+                        value={formData.fullName}
+                        onChange={handleNameChange}
+                        className={`w-full pr-12 pl-4 py-3.5 bg-gray-50 border-2 rounded-2xl focus:outline-none focus:ring-4 focus:ring-[var(--color-primary-light)] transition-all ${
+                          formErrors.fullName ? 'border-rose-300' : 'border-gray-100 focus:border-[var(--color-primary)]'
+                        }`}
+                        placeholder="الاسم الثلاثي المريض..."
+                      />
+                      
+                      <AnimatePresence>
+                        {isSearching && searchResults.length > 0 && (
+                          <motion.div 
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 10 }}
+                            className="absolute z-50 w-full mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
+                          >
+                             {searchResults.map(p => (
+                               <button
+                                 key={p.id}
+                                 type="button"
+                                 onClick={() => selectPatient(p)}
+                                 className="w-full p-4 flex items-center gap-4 hover:bg-[var(--color-primary-light)] transition-colors text-right border-b border-gray-50 last:border-0"
+                               >
+                                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-[var(--color-primary)]">
+                                     <Person />
+                                  </div>
+                                  <div className="flex-1">
+                                     <p className="font-bold text-gray-800 text-sm">{p.fullName}</p>
+                                     <p className="text-xs text-gray-400">{p.phoneNumber}</p>
+                                  </div>
+                                  <Search className="text-gray-300" fontSize="small" />
+                               </button>
+                             ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                    {formErrors.fullName && <p className="text-rose-500 text-xs mt-1 mr-1">{formErrors.fullName}</p>}
+                  </div>
+
+                  {/* Phone */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2 mr-1">رقم الهاتف</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400">
+                        <Phone />
+                      </div>
+                      <input
+                        type="text"
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
+                        onChange={handleInputChange}
+                        className={`w-full pr-12 pl-4 py-3.5 bg-gray-50 border-2 rounded-2xl focus:outline-none focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary-light)] transition-all ${
+                          formErrors.phoneNumber ? 'border-rose-300' : 'border-gray-100'
+                        }`}
+                        placeholder="01XXXXXXXXX"
+                      />
+                    </div>
+                    {formErrors.phoneNumber && <p className="text-rose-500 text-xs mt-1 mr-1">{formErrors.phoneNumber}</p>}
+                  </div>
+
+                  {/* Age */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2 mr-1">العمر</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400">
+                        <Cake />
+                      </div>
+                      <input
+                        type="number"
+                        name="age"
+                        value={formData.age}
+                        onChange={handleInputChange}
+                        className="w-full pr-12 pl-4 py-3.5 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:outline-none focus:border-[var(--color-primary)] transition-all"
+                        placeholder="سنة"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Address */}
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-bold text-gray-700 mb-2 mr-1">العنوان</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400">
+                        <HomeIcon />
+                      </div>
+                      <input
+                        type="text"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        className="w-full pr-12 pl-4 py-3.5 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:outline-none focus:border-[var(--color-primary)] transition-all"
+                        placeholder="أدخل عنوان السكن بالتفصيل..."
+                      />
+                    </div>
+                  </div>
+
+                  {/* Doctor */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2 mr-1">الطبيب</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 pointer-events-none">
+                        <LocalHospital />
+                      </div>
+                      <select
+                        name="doctor_id"
+                        value={formData.doctor_id}
+                        onChange={handleInputChange}
+                        className={`w-full pr-12 pl-4 py-3.5 bg-gray-50 border-2 rounded-2xl focus:outline-none appearance-none transition-all ${
+                          formErrors.doctor_id ? 'border-rose-300' : 'border-gray-100 focus:border-[var(--color-primary)]'
+                        }`}
+                      >
+                        <option value="">اختار الطبيب</option>
+                        {doctors.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Date */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2 mr-1">وقت الموعد</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400">
+                        <Event />
+                      </div>
+                      <input
+                        type="datetime-local"
+                        name="appointmentDateTime"
+                        value={formData.appointmentDateTime}
+                        onChange={handleInputChange}
+                        className={`w-full pr-12 pl-4 py-3.5 bg-gray-50 border-2 rounded-2xl focus:outline-none transition-all ${
+                          formErrors.appointmentDateTime ? 'border-rose-300' : 'border-gray-100 focus:border-[var(--color-primary)]'
+                        }`}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Visit Type */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2 mr-1">نوع الزيارة</label>
+                    <div className="flex gap-2">
+                       {['كشف', 'استشارة', 'متابعة'].map(type => (
+                         <button
+                           key={type}
+                           type="button"
+                           onClick={() => setFormData(prev => ({ ...prev, visitType: type }))}
+                           className={`flex-1 py-3 text-xs font-bold rounded-xl border-2 transition-all ${
+                             formData.visitType === type 
+                               ? 'bg-[var(--color-primary)] border-[var(--color-primary)] text-white shadow-lg' 
+                               : 'border-gray-100 bg-gray-50 text-gray-400'
+                           }`}
+                         >
+                           {type}
+                         </button>
+                       ))}
+                    </div>
+                  </div>
+
+                  {/* Amount */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2 mr-1">المبلغ المطلوب</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center text-[var(--color-primary-dark)] font-bold">L.E</div>
+                      <input
+                        type="number"
+                        name="amount"
+                        value={formData.amount || ''}
+                        onChange={handleInputChange}
+                        className="w-full pr-4 pl-12 py-3.5 bg-gray-100 border-2 border-gray-100 rounded-2xl focus:outline-none font-black"
+                        placeholder="0.00"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Payment Status */}
+                  <div className="md:col-span-2 py-4 bg-gray-50 px-6 rounded-3xl border border-gray-100 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                       <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${formData.payment ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-100' : 'bg-gray-200 text-gray-400'}`}>
+                          <AttachMoney />
+                       </div>
+                       <div>
+                          <p className="text-sm font-bold text-gray-700">تأكيد الدفع</p>
+                          <p className="text-[10px] text-gray-400">{formData.payment ? 'المريض دفع الرسوم نقداً' : 'لم يتم التحصيل بعد'}</p>
+                       </div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input 
+                        type="checkbox" 
+                        name="payment"
+                        checked={formData.payment}
+                        onChange={handleInputChange}
+                        className="sr-only peer" 
+                      />
+                      <div className="w-14 h-8 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:right-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-500"></div>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Footer buttons */}
+                <div className="pt-6 flex gap-4">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-[2] py-4 text-white font-black rounded-2xl shadow-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-lg active:scale-95"
+                    style={{ background: 'linear-gradient(135deg, var(--color-primary-dark), var(--color-primary))', boxShadow: '0 10px 20px -5px var(--color-primary-light)' }}
                   >
-                    <option value="">اختر نوع الزيارة</option>
-                    <option value="فحص">فحص</option>
-                    <option value="متابعة">متابعة</option>
-                    <option value="استشارة">استشارة</option>
-                  </select>
-                  {formErrors.visitType && <p className="text-red-600 text-sm mt-1">{formErrors.visitType}</p>}
-                </motion.div>
-                <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.55 }}>
-                  <label htmlFor="doctor_id" className="block text-sm font-semibold text-gray-700 mb-2">
-                    الطبيب
-                  </label>
-                  <select
-                    className={`w-full p-3 border ${
-                      formErrors.doctor_id ? 'border-red-300' : 'border-gray-300'
-                    } rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200`}
-                    id="doctor_id"
-                    name="doctor_id"
-                    value={formData.doctor_id}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="">اختر الطبيب</option>
-                    {doctors.map(doctor => (
-                      <option key={doctor.id} value={doctor.id}>
-                        {doctor.name} (رسوم: {doctor.fees} جنيه)
-                      </option>
-                    ))}
-                  </select>
-                  {formErrors.doctor_id && <p className="text-red-600 text-sm mt-1">{formErrors.doctor_id}</p>}
-                </motion.div>
-                <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 }}>
-                  <label htmlFor="amount" className="block text-sm font-semibold text-gray-700 mb-2">
-                    المبلغ (جنيه مصري)
-                  </label>
-                  <input
-                    type="number"
-                    className={`w-full p-3 border ${
-                      formErrors.amount ? 'border-red-300' : 'border-gray-300'
-                    } rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 bg-gray-100 cursor-not-allowed`}
-                    id="amount"
-                    name="amount"
-                    value={formData.amount ?? ''}
-                    readOnly
-                  />
-                  {formErrors.amount && <p className="text-red-600 text-sm mt-1">{formErrors.amount}</p>}
-                </motion.div>
-                <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.65 }}>
-                  <label htmlFor="notes" className="block text-sm font-semibold text-gray-700 mb-2">
-                    الملاحظات
-                  </label>
-                  <textarea
-                    className={`w-full p-3 border ${
-                      formErrors.notes ? 'border-red-300' : 'border-gray-300'
-                    } rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200`}
-                    id="notes"
-                    name="notes"
-                    rows="4"
-                    value={formData.notes}
-                    onChange={handleChange}
-                    placeholder="أضف ملاحظات (اختياري)..."
-                  ></textarea>
-                  {formErrors.notes && <p className="text-red-600 text-sm mt-1">{formErrors.notes}</p>}
-                </motion.div>
-                <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 }}>
-                  <label htmlFor="payment" className="block text-sm font-semibold text-gray-700 mb-2">
-                    حالة الدفع
-                  </label>
-                  <input
-                    type="checkbox"
-                    className="p-3 border border-gray-300 rounded-lg"
-                    id="payment"
-                    name="payment"
-                    checked={formData.payment}
-                    onChange={e => setFormData(prev => ({ ...prev, payment: e.target.checked }))}
-                  />
-                  <span className="ml-2">{formData.payment ? 'مدفوع' : 'غير مدفوع'}</span>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.75 }}
-                  className="flex justify-end gap-3 pt-4"
-                >
-                  <motion.button
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
+                    {loading ? (
+                       <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                    ) : (
+                      <>
+                        <Event fontSize="small" />
+                        {editData ? 'تحديث الحجز' : 'حفظ الموعد'}
+                      </>
+                    )}
+                  </button>
+                  <button
                     type="button"
-                    onClick={() => {
-                      setShowModal(false);
-                      setFormErrors({});
-                    }}
-                    className="px-5 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 shadow-sm"
+                    onClick={() => setShowModal(false)}
+                    className="flex-1 py-4 bg-gray-50 text-gray-400 font-bold rounded-2xl hover:bg-gray-100 transition-colors"
                   >
                     إلغاء
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    type="submit"
-                    className="px-5 py-2.5 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white rounded-lg hover:from-cyan-700 hover:to-cyan-800 transition-all duration-300 shadow-md"
-                  >
-                    إضافة الموعد
-                  </motion.button>
-                </motion.div>
-              </div>
-            </form>
+                  </button>
+                </div>
+              </form>
+            </div>
           </motion.div>
-        </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );

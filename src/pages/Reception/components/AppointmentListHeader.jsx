@@ -32,13 +32,15 @@ export const AppointmentListHeader = ({ setShowModal }) => (
       </motion.div>
     </div>
     <motion.button
-      whileHover={{ scale: 1.05, y: -2 }}
+      whileHover={{ scale: 1.05, y: -2, boxShadow: '0 10px 25px -5px rgba(0, 188, 212, 0.4)' }}
       whileTap={{ scale: 0.95 }}
       onClick={() => setShowModal(true)}
-      className="btn bg-gradient-to-r from-cyan-600 to-cyan-700 text-white hover:from-cyan-700 hover:to-cyan-800 transition-all duration-300 shadow-md flex items-center gap-2"
+      className="px-6 py-3.5 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-dark)] text-white rounded-2xl font-black transition-all duration-300 shadow-xl shadow-[var(--color-primary-light)] flex items-center gap-3 border border-white/20 active:scale-95"
     >
-      <Add fontSize="small" />
-      إضافة موعد
+      <div className="bg-white/20 p-1 rounded-lg">
+        <Add fontSize="small" />
+      </div>
+      <span className="tracking-wide">حجز موعد جديد</span>
     </motion.button>
   </div>
 );

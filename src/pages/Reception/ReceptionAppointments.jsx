@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
 import { supabase } from '../../supaBase/ReceptionBooking';
 import useAppointmentStore from '../../store/appointmentStore';
 import { AppointmentHelmet } from './components/AppointmentHelmet';
@@ -10,13 +8,13 @@ import { AppointmentTable } from './components/AppointmentTable';
 import { AppointmentModal } from './components/AppointmentModal';
 import { ErrorMessage } from './components/ErrorMessage';
 import { EmptyState } from './components/EmptyState';
-import Swal from 'sweetalert2';
 import { useMediaQuery } from 'react-responsive';
-import { motion } from 'framer-motion';
+
 
 const ReceptionAppointments = () => {
-  const { appointments, fetchAppointments, error, reorderAppointments, updateAppointment, deleteAppointment } = useAppointmentStore();
+  const { appointments, fetchAppointments, error, updateAppointment, deleteAppointment, togglePaymentStatus } = useAppointmentStore();
   const [showModal, setShowModal] = useState(false);
+  const [editData, setEditData] = useState(null);
   const [doctors, setDoctors] = useState([]);
   const [formData, setFormData] = useState({
     fullName: '',
@@ -100,23 +98,44 @@ const ReceptionAppointments = () => {
     setFilteredAppointments(filtered);
   }, [appointments, filter, searchQuery]);
 
+  const handleOpenAdd = () => {
+    setEditData(null);
+    setFormData({
+      fullName: '',
+      address: '',
+      age: '',
+      phoneNumber: '',
+      visitType: '',
+      notes: '',
+      doctor_id: '',
+      appointmentDateTime: '',
+      status: 'في الإنتظار',
+      amount: null,
+      payment: false,
+    });
+    setFormErrors({});
+    setShowModal(true);
+  };
+
+  const handleOpenEdit = (appt) => {
+    setEditData(appt);
+    setShowModal(true);
+  };
+
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="p-4 sm:p-6" dir="rtl">
-        <AppointmentHelmet />
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-white shadow-xl rounded-2xl p-4 sm:p-6 border border-gray-100"
-        >
-          <AppointmentListHeader setShowModal={setShowModal} />
-          <AppointmentSearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            filter={filter}
-            setFilter={setFilter}
-          />
+    <div className="p-4 sm:p-6" dir="rtl">
+      <AppointmentHelmet />
+      <div
+        className="bg-white shadow-xl rounded-2xl p-4 sm:p-6 border border-gray-100 flex flex-col h-[calc(100vh-120px)]"
+      >
+        <AppointmentListHeader setShowModal={handleOpenAdd} />
+        <AppointmentSearchBar
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          filter={filter}
+          setFilter={setFilter}
+        />
+        <div className="flex-1 overflow-y-auto mt-4 custom-scrollbar">
           {error && <ErrorMessage error={error} />}
           {filteredAppointments.length === 0 && !error ? (
             <EmptyState searchQuery={searchQuery} />
@@ -125,23 +144,25 @@ const ReceptionAppointments = () => {
               filteredAppointments={filteredAppointments}
               isMobile={isMobile}
               isTablet={isTablet}
-              reorderAppointments={reorderAppointments}
               updateAppointment={updateAppointment}
               deleteAppointment={deleteAppointment}
+              togglePaymentStatus={togglePaymentStatus}
+              onEdit={handleOpenEdit}
             />
           )}
-        </motion.div>
-        <AppointmentModal
-          showModal={showModal}
-          setShowModal={setShowModal}
-          formData={formData}
-          setFormData={setFormData}
-          formErrors={formErrors}
-          setFormErrors={setFormErrors}
-          doctors={doctors}
-        />
+        </div>
       </div>
-    </DndProvider>
+      <AppointmentModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        formData={formData}
+        setFormData={setFormData}
+        formErrors={formErrors}
+        setFormErrors={setFormErrors}
+        doctors={doctors}
+        editData={editData}
+      />
+    </div>
   );
 };
 

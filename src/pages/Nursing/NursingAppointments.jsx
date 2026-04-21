@@ -228,7 +228,7 @@ const NursingAppointments = () => {
           <div className="w-full lg:w-64 lg:min-h-screen">
             <NursingSidebar />
           </div>
-          <main className="flex-1 p-4 sm:p-6 w-full">
+          <main className="flex-1 p-4 sm:p-6 w-full h-[calc(100vh-64px)] overflow-y-auto custom-scrollbar">
             <nav className="bg-white p-3 mb-4 rounded-lg shadow-sm lg:hidden">
               <button
                 className="text-gray-700"
@@ -242,10 +242,7 @@ const NursingAppointments = () => {
                 <span className="inline-block w-6 h-6 bg-[url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 30 30%27%3E%3Cpath stroke=%27rgba(0, 0, 0, 0.5)%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-miterlimit=%2710%27 d=%27M4 7h22M4 15h22M4 23h22%27/%3E%3C/svg%3E')] bg-no-repeat bg-center" />
               </button>
             </nav>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
+            <div
               className="bg-white shadow-xl rounded-2xl p-4 sm:p-6 border border-gray-100"
             >
               <AppointmentStats getChartData={getChartData} />
@@ -264,18 +261,20 @@ const NursingAppointments = () => {
                 filter={filter}
                 setFilter={setFilter}
               />
-              {error && <ErrorMessage error={error} />}
-              {filteredAppointments.length === 0 && !error ? (
-                <EmptyState searchQuery={searchQuery} />
-              ) : (
-                <AppointmentTable
-                  filteredAppointments={filteredAppointments}
-                  isMobile={isMobile}
-                  isTablet={isTablet}
-                  reorderAppointments={reorderAppointments}
-                />
-              )}
-            </motion.div>
+              <div className="flex-1 overflow-y-auto mt-4 custom-scrollbar max-h-[500px]">
+                {error && <ErrorMessage error={error} />}
+                {filteredAppointments.length === 0 && !error ? (
+                  <EmptyState searchQuery={searchQuery} />
+                ) : (
+                  <AppointmentTable
+                    filteredAppointments={filteredAppointments}
+                    isMobile={isMobile}
+                    isTablet={isTablet}
+                    reorderAppointments={reorderAppointments}
+                  />
+                )}
+              </div>
+            </div>
             <AppointmentModal
               showModal={showModal}
               setShowModal={setShowModal}

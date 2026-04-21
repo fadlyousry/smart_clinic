@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+
 import Swal from 'sweetalert2';
 import { ErrorBoundary } from './ErrorBoundary';
 import { EditForm } from './EditForm';
@@ -40,14 +40,9 @@ export const ExpandedView = ({
   };
 
   return (
-    <AnimatePresence>
+    <>
       {isExpanded && (
-        <motion.tr
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.3 }}
-        >
+        <tr>
           <td colSpan={isMobile ? 4 : 9} className="p-4 bg-gray-50">
             <ErrorBoundary>
               {isEditing ? (
@@ -116,20 +111,18 @@ export const ExpandedView = ({
                       {appt.amount ? `${appt.amount} جنيه` : 'غير محدد'}
                     </span>
                   </div>
-                  <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.98 }}
+                  <button
                     onClick={() => setIsEditing(true)}
-                    className="px-4 py-2 bg-cyan-600 text-white rounded-lg"
+                    className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
                   >
                     تعديل الموعد
-                  </motion.button>
+                  </button>
                 </div>
               )}
             </ErrorBoundary>
           </td>
-        </motion.tr>
+        </tr>
       )}
-    </AnimatePresence>
+    </>
   );
 };

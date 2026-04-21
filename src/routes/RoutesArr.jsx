@@ -24,6 +24,8 @@ import {
   ReceptionAppointments,
   ReceptionPatientsList,
   ReceptionStatistics,
+  ReceptionCalendar,
+  ReceptionSettings,
 } from './lazy';
 import NursingLayout from '../pages/Nursing/NursingLayout';
 import ReceptionLayout from '../pages/Reception/ReceptionLayout';
@@ -55,8 +57,10 @@ export const RoutesArray = [
     path: '/reception-dashboard',
     children: [
       { id: v4(), element: <ReceptionAppointments />, path: '', index: true },
+      { id: v4(), element: <ReceptionCalendar />, path: 'calendar' },
       { id: v4(), element: <ReceptionPatientsList />, path: 'patients' },
       { id: v4(), element: <ReceptionStatistics />, path: 'statistics' },
+      { id: v4(), element: <ReceptionSettings />, path: 'settings' },
     ],
   },
   {

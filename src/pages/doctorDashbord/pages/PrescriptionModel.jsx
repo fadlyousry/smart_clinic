@@ -126,7 +126,6 @@ export default function PrescriptionModel({ isOpen, onClose, selectedPatient }) 
                         gender: "غير محدد",
                         phoneNumber: "",
                         address: "",
-                        status: "جديد",
                         blood: "",
                         chronic_diseases: []
                     }])

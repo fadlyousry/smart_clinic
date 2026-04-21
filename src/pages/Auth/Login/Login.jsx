@@ -38,13 +38,13 @@ export default function Login() {
           <h2 className="text-2xl font-bold text-center text-white mb-6 drop-shadow-md">تسجيل الدخول</h2>
 
           <form onSubmit={formik.handleSubmit} className="space-y-4">
-            {/* Email */}
+            {/* Username/Email */}
             <div>
-              <label className="block mb-1 font-medium text-white text-right drop-shadow-md">البريد الإلكتروني</label>
+              <label className="block mb-1 font-medium text-white text-right drop-shadow-md">البريد الإلكتروني أو اسم المستخدم</label>
               <input
-                type="email"
+                type="text"
                 name="email"
-                placeholder="أدخل بريدك الإلكتروني"
+                placeholder="أدخل البريد أو اسم المستخدم"
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}

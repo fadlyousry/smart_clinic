@@ -1,4 +1,4 @@
-﻿import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 import Swal from 'sweetalert2';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -32,7 +32,7 @@ export const addPatient = async (patientData, resetForm) => {
         date: patientData.bookingDate,
         visitType: patientData.visitType,
         status: 'محجوز',
-        doctor_id: 1,
+        doctor_id: patientData.doctor_id,
         patient_id: existingPhone?.id || newPatient?.id,
         time: now.toLocaleTimeString(),
       },

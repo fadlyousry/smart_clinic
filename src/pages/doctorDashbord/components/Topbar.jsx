@@ -14,8 +14,11 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 function Topbar({ toggleSidebar }) {
     const { doctors } = useDoctorDashboardStore();
     const [showMenu, setShowMenu] = useState(false);
-    const { logout } = useAuthStore();
+    const { logout, CUdoctorId } = useAuthStore();
     const navigate = useNavigate();
+
+    const currentDoctorId = CUdoctorId();
+    const currentDoctor = doctors.find(d => d.id === currentDoctorId);
 
 
     const dropdownRef = useRef(null);
@@ -63,7 +66,7 @@ function Topbar({ toggleSidebar }) {
                         <AccountCircleIcon style={{ fontSize: 35, borderRadius: '50%' }} />
 
                         <span className="user-name">
-                            {doctors.length > 0 ? `${doctors[0].name}` : 'د/مجهول'}
+                            {currentDoctor ? `${currentDoctor.name}` : 'د/مجهول'}
                         </span>
                     </button>
 

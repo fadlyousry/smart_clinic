@@ -10,7 +10,7 @@ export const Schema = Yup.object({
     .matches(/^01[0125][0-9]{8}$/, 'برجاء دخال رقم هاتف صحيح'),
   bookingDate: Yup.string().required('تاريخ الحجز مطلوب'),
   visitType: Yup.string().required('نوع الزيارة مطلوب'),
-  notes: Yup.string().max(700, 'الملاحظات لا يجب أن تتجاوز 700 حرف'),
+  doctor_id: Yup.number().required('يجب اختيار الطبيب المعالج').typeError('يجب اختيار الطبيب المعالج'),
 });
 
 export const formData = {
@@ -20,6 +20,7 @@ export const formData = {
   phoneNumber: '',
   bookingDate: '',
   visitType: '',
+  doctor_id: '',
   notes: '',
 };
 

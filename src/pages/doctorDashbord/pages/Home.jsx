@@ -1,4 +1,5 @@
 import useDoctorDashboardStore from "../../../store/doctorDashboardStore";
+import useAuthStore from "../../../store/auth";
 import { useEffect } from "react";
 import { setupRealtimePatients } from "../../../lib/supabaseRealtime";
 import { CurrentPatient } from '../components/CurrentPatient';
@@ -22,8 +23,12 @@ const Home = () => {
     return () => channel.unsubscribe();
   }, []);
 
+  const { CUdoctorId } = useAuthStore();
   const patients = useDoctorDashboardStore(state => state.patients);
-  const appointments = useDoctorDashboardStore(state => state.appointments);
+  const allAppointments = useDoctorDashboardStore(state => state.appointments);
+  
+  // تصفية المواعيد لتُظهر فقط المواعيد الخاصة بالدكتور الحالي
+  const appointments = allAppointments.filter(app => app.doctor_id === CUdoctorId());
 
   const navigate = useNavigate();
   const goToPatientFile = () => navigate("./Appointments");

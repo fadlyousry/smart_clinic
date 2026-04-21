@@ -24,8 +24,11 @@ const useAuthStore = create(
 
       login: async ({ email, password }, navigate) => {
         try {
+          // If the user typed a username without '@', append our dummy domain
+          const finalEmail = email.includes('@') ? email : `${email.trim().toLowerCase()}@smartclinic.com`;
+          
           const { data, error } = await supabase.auth.signInWithPassword({
-            email,
+            email: finalEmail,
             password,
           });
 
@@ -35,23 +38,25 @@ const useAuthStore = create(
 
           const metadata = data.user?.user_metadata || null;
           let doctorId = null;
+          let isAdmin = false;
 
-          // لو المستخدم دكتور، هنجيب الـ doctor_id من جدول doctors
+          // لو المستخدم دكتور، هنجيب الـ doctor_id و is_admin من جدول doctors
           if (metadata?.role === 'doctor' && data.user?.id) {
             const { data: doctorData, error: doctorError } = await supabase
               .from('doctors')
-              .select('id')
+              .select('id, is_admin')
               .eq('user_id', data.user.id)
               .single();
 
             if (!doctorError && doctorData) {
               doctorId = doctorData.id;
+              isAdmin = doctorData.is_admin || false;
             } else {
               console.warn('لم يتم العثور على ملف الطبيب المرتبط بهذا الحساب');
             }
           }
 
-          set({ current_user: { ...metadata, doctor_id: doctorId, auth_uid: data.user?.id } });
+          set({ current_user: { ...metadata, doctor_id: doctorId, is_admin: isAdmin, auth_uid: data.user?.id } });
           get().showAlert('success', 'تم تسجيل الدخول بنجاح', 'مرحباً بعودتك!');
           if (metadata.role == 'doctor') navigate('/DoctorDashboard');
           else if (metadata.role == 'nurse') navigate('/nursing-dashboard');
@@ -163,6 +168,7 @@ const useAuthStore = create(
       CUrole: () => get().current_user?.role || '',
       CUdoctorId: () => get().current_user?.doctor_id || null,
       CUauthUid: () => get().current_user?.auth_uid || null,
+      CUisAdmin: () => get().current_user?.is_admin || false,
     }),
     {
       name: 'auth-storage',

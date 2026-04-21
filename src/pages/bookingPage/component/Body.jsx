@@ -8,6 +8,7 @@ import { AgeInput } from "./AgeInput.jsx";
 import { AddressInput } from "./AddressInput.jsx";
 import { NameInput } from "./NameInput.jsx";
 import { FormHeader } from "./FormHeader.jsx";
+import { DoctorSelect } from "./DoctorSelect.jsx";
 import { Formik, Form } from "formik";
 
 export function Body({ formData, handleSubmit, Schema }) {
@@ -27,6 +28,7 @@ export function Body({ formData, handleSubmit, Schema }) {
             <PhoneInput />
             <BookingDataInput />
             <VisitTypeInput />
+            <DoctorSelect />
           </div>
           <div className="mt-5">
             <NotesInput />

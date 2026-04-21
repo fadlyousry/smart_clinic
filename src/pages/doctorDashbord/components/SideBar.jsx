@@ -7,13 +7,16 @@ import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import ScienceIcon from "@mui/icons-material/Science";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { NavLink } from "react-router-dom";
 import logo from "../../../assets/logo2.png";
 import CloseIcon from "@mui/icons-material/Close";
+import useAuthStore from "../../../store/auth";
 
 import "./SideBar.css";
 
 function SideBar({ isOpen, toggleSidebar }) {
+    const { CUisAdmin } = useAuthStore();
     return (
         <>
             {isOpen && <div className="sidebar-overlay" onClick={toggleSidebar}></div>}
@@ -98,7 +101,13 @@ function SideBar({ isOpen, toggleSidebar }) {
                             <PersonIcon /> الملف الشخصي
                         </NavLink>
                     </li>
-
+                    {CUisAdmin() && (
+                        <li className="sidebar-item">
+                            <NavLink to="/DoctorDashboard/doctor-management" className="sidebar-link">
+                                <AdminPanelSettingsIcon /> إدارة الأطباء
+                            </NavLink>
+                        </li>
+                    )}
                 </ul>
             </div>
         </>

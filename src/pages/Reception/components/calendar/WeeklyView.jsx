@@ -119,7 +119,7 @@ const WeeklyView = ({ selectedDate, setSelectedDate, setViewMode, appointments, 
                   } ${slotAppts.length === 0 ? 'hover:bg-gray-50/50' : ''}`}
                 >
                   {slotAppts.map(appt => {
-                    const doctorColor = getDoctorColor(appt.doctor_id);
+                    const doctorColor = appt.customColor || getDoctorColor(appt.doctor_id);
                     const statusColor = getStatusColor(appt.status);
                     return (
                       <div

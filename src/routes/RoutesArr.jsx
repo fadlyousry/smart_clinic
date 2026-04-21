@@ -26,6 +26,10 @@ import {
   ReceptionStatistics,
   ReceptionCalendar,
   ReceptionSettings,
+  LabLayout,
+  LabHome,
+  CompletedRequests,
+  LabCalendar,
 } from './lazy';
 import NursingLayout from '../pages/Nursing/NursingLayout';
 import ReceptionLayout from '../pages/Reception/ReceptionLayout';
@@ -61,6 +65,16 @@ export const RoutesArray = [
       { id: v4(), element: <ReceptionPatientsList />, path: 'patients' },
       { id: v4(), element: <ReceptionStatistics />, path: 'statistics' },
       { id: v4(), element: <ReceptionSettings />, path: 'settings' },
+    ],
+  },
+  {
+    id: v4(),
+    element: <LabLayout />,
+    path: '/lab-dashboard',
+    children: [
+      { id: v4(), element: <LabHome />, path: '', index: true },
+      { id: v4(), element: <CompletedRequests />, path: 'completed' },
+      { id: v4(), element: <LabCalendar />, path: 'calendar' },
     ],
   },
   {

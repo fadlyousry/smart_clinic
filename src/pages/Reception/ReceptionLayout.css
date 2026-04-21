@@ -37,7 +37,8 @@
     background: var(--color-primary);
 }
 
+
 /* Prevent double scrolls */
-body {
-    overflow: hidden;
-}
+/* Removed global body overflow: hidden because it was disabling scroll for the entire site */
+/* .reception-dashboard already handles internal scroll via .content */
+

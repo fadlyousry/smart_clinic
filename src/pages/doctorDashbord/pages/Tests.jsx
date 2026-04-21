@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from "../../../supaBase/booking";
+import useAuthStore from '../../../store/auth';
 
 
 import {
@@ -31,6 +32,7 @@ import {
 } from '@mui/material';
 
 const Tests = () => {
+    const { CUdoctorId } = useAuthStore();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedTests, setSelectedTests] = useState([]);
     const [activeFilter, setActiveFilter] = useState('الكل');
@@ -180,6 +182,7 @@ const Tests = () => {
             patient_id: selectedPatient,
             test_id,
             status: 'قيد التنفيذ',
+            doctor_id: CUdoctorId()
         }));
         const { error } = await supabase.from('test_requests').insert(inserts);
         if (!error) {

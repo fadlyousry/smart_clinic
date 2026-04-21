@@ -1,4 +1,4 @@
-﻿import React, { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { groupAppointmentsByDate, getDoctorColor, getStatusColor } from '../../utils/calendarHelpers';
 import AppointmentCard from './AppointmentCard';
 import { format, parseISO } from 'date-fns';
@@ -87,7 +87,7 @@ const EnhancedListView = ({ selectedDate, appointments, onView, onEdit }) => {
                     <div className="flex flex-col items-center shrink-0 pt-3">
                       <div
                         className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-black shadow-sm"
-                        style={{ backgroundColor: getDoctorColor(appt.doctor_id).bg }}
+                        style={{ backgroundColor: (appt.customColor || getDoctorColor(appt.doctor_id)).bg }}
                       >
                         {idx + 1}
                       </div>

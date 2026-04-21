@@ -9,11 +9,41 @@ export default function PatientProfile({ patient }) {
     const [testRequests, setTestRequests] = useState([]);
     const [loadingTests, setLoadingTests] = useState(false);
 
+    // جلب البيانات مع دعم البث المباشر (Realtime)
     useEffect(() => {
-        if (isTestsModalOpen && patient) {
+        if (patient) {
             fetchTestRequests();
+
+            // الاشتراك في تحديثات التحاليل لهذا المريض
+            const channel = supabase
+                .channel(`patient-tests-${patient.id}`)
+                .on(
+                    'postgres_changes',
+                    { 
+                        event: '*', 
+                        schema: 'public', 
+                        table: 'test_requests'
+                    },
+                    (payload) => {
+                        console.log('🔁 Realtime update in PatientProfile:', payload);
+                        
+                        // تحديث البيانات إذا كانت تخص المريض الحالي أو في حالة الحذف (الذي قد لا يحتوي على patient_id)
+                        if (
+                            payload.eventType === 'DELETE' || 
+                            (payload.new && payload.new.patient_id === patient.id) ||
+                            (payload.old && payload.old.patient_id === patient.id)
+                        ) {
+                            fetchTestRequests();
+                        }
+                    }
+                )
+                .subscribe();
+
+            return () => {
+                supabase.removeChannel(channel);
+            };
         }
-    }, [isTestsModalOpen, patient]);
+    }, [patient]);
 
     const fetchTestRequests = async () => {
         if (!patient) return;
@@ -30,29 +60,16 @@ export default function PatientProfile({ patient }) {
             setTestRequests(data || []);
         } catch (error) {
             console.error('Error fetching test requests:', error);
-            alert('حدث خطأ في جلب التحاليل');
         } finally {
             setLoadingTests(false);
         }
     };
 
-    useEffect(() => {
-        const handleTestRequestUpdated = () => fetchTestRequests();
-        const handleTestRequestDeleted = () => fetchTestRequests();
-
-        window.addEventListener('testRequestUpdated', handleTestRequestUpdated);
-        window.addEventListener('testRequestDeleted', handleTestRequestDeleted);
-
-        return () => {
-            window.removeEventListener('testRequestUpdated', handleTestRequestUpdated);
-            window.removeEventListener('testRequestDeleted', handleTestRequestDeleted);
-        };
-    }, []);
-
     return (
         <div className="space-y-6">
             <PatientInfo 
                 patient={patient} 
+                testRequests={testRequests}
                 onOpenTestsModal={() => setIsTestsModalOpen(true)}
             />
             

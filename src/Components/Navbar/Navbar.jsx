@@ -290,6 +290,15 @@ export default function Navbar() {
                                 <i className="fa-solid fa-user-nurse ml-3 text-[var(--color-primary)]"></i>
                                 لوحة تحكم التمريض
                               </NavLink>
+                            ) : CUrole() === 'lab' ? (
+                              <NavLink
+                                className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                                to="/lab-dashboard"
+                                onClick={handleNavClick}
+                              >
+                                <i className="fa-solid fa-flask ml-3 text-[var(--color-primary)]"></i>
+                                لوحة تحكم المعمل
+                              </NavLink>
                             ) : (
                               <NavLink
                                 className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
@@ -493,6 +502,15 @@ export default function Navbar() {
                         >
                           <i className="fa-solid fa-user-nurse ml-3"></i>
                           لوحة تحكم التمريض
+                        </NavLink>
+                      ) : CUrole() === 'lab' ? (
+                        <NavLink
+                          className="block text-lg text-white py-3 px-2 rounded hover:bg-cyan-400 transition-colors"
+                          to="/lab-dashboard"
+                          onClick={handleNavClick}
+                        >
+                          <i className="fa-solid fa-flask ml-3"></i>
+                          لوحة تحكم المعمل
                         </NavLink>
                       ) : (
                         <NavLink

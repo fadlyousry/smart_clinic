@@ -102,11 +102,18 @@ function SideBar({ isOpen, toggleSidebar }) {
                         </NavLink>
                     </li>
                     {CUisAdmin() && (
-                        <li className="sidebar-item">
-                            <NavLink to="/DoctorDashboard/doctor-management" className="sidebar-link">
-                                <AdminPanelSettingsIcon /> إدارة الأطباء
-                            </NavLink>
-                        </li>
+                        <>
+                            <li className="sidebar-item">
+                                <NavLink to="/DoctorDashboard/doctor-management" className="sidebar-link">
+                                    <AdminPanelSettingsIcon /> إدارة الأطباء
+                                </NavLink>
+                            </li>
+                            <li className="sidebar-item">
+                                <NavLink to="/DoctorDashboard/lab-management" className="sidebar-link">
+                                    <ScienceIcon /> إدارة المعمل
+                                </NavLink>
+                            </li>
+                        </>
                     )}
                 </ul>
             </div>

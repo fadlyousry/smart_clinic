@@ -9,7 +9,7 @@ import { ar } from 'date-fns/locale';
  * @param {'compact' | 'normal' | 'full'} variant
  */
 const AppointmentCard = memo(({ appt, variant = 'normal', onView, onEdit }) => {
-  const doctorColor = getDoctorColor(appt.doctor_id);
+  const doctorColor = appt.customColor || getDoctorColor(appt.doctor_id);
   const statusColor = getStatusColor(appt.status);
   const time = appt.date ? format(new Date(appt.date), 'hh:mm a', { locale: ar }) : '';
 
@@ -49,15 +49,26 @@ const AppointmentCard = memo(({ appt, variant = 'normal', onView, onEdit }) => {
               </span>
             </div>
             <div className="flex items-center gap-2 sm:gap-3 text-xs text-gray-400 flex-wrap">
-              <span className="flex items-center gap-1" title="الطبيب">
+              <div className="flex items-center gap-1" title="الطبيب">
                 <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: doctorColor.bg }}></div>
                 <span className="truncate max-w-[100px]">{appt.doctorName}</span>
-              </span>
+              </div>
               <span className="flex items-center gap-0.5" title="الوقت">
                 <AccessTime style={{ fontSize: 11 }} />
                 {time}
               </span>
               <span className="hidden sm:inline">{appt.visitType === 'فحص' ? 'كشف' : appt.visitType}</span>
+              {appt.isBatch && (
+                <span className="bg-cyan-50 text-cyan-600 px-2 py-0.5 rounded-lg text-[9px] font-black border border-cyan-100 flex items-center gap-1">
+                  <div className="w-1 h-1 bg-cyan-600 rounded-full animate-pulse"></div>
+                  مجموعة ({appt.requests?.length})
+                </span>
+              )}
+              {appt.urgent && (
+                <span className="bg-red-50 text-red-600 px-2 py-0.5 rounded-lg text-[9px] font-black border border-red-100 animate-bounce">
+                  عاجل 🔥
+                </span>
+              )}
             </div>
           </div>
 
@@ -127,10 +138,10 @@ const AppointmentCard = memo(({ appt, variant = 'normal', onView, onEdit }) => {
           <p className="text-gray-400 text-[10px] font-bold mb-0.5 flex items-center gap-1">
             <LocalHospital style={{ fontSize: 10 }} /> الطبيب
           </p>
-          <p className="font-bold text-gray-700 flex items-center gap-1 truncate">
+          <div className="font-bold text-gray-700 flex items-center gap-1 truncate">
             <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: doctorColor.bg }}></div>
             <span className="truncate">{appt.doctorName}</span>
-          </p>
+          </div>
         </div>
         <div className="bg-gray-50 px-3 py-2 rounded-lg">
           <p className="text-gray-400 text-[10px] font-bold mb-0.5 flex items-center gap-1">

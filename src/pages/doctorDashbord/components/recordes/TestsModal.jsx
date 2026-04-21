@@ -13,6 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import PendingIcon from '@mui/icons-material/Pending';
+import ScienceIcon from '@mui/icons-material/Science';
 
 export default function TestsModal({ isOpen, onClose, patient, testRequests }) {
     const [selectedTest, setSelectedTest] = useState(null);
@@ -54,18 +55,8 @@ export default function TestsModal({ isOpen, onClose, patient, testRequests }) {
             if (error) throw error;
 
 
-            window.dispatchEvent(new CustomEvent('testRequestUpdated', {
-                detail: { testRequestId: selectedTest.id, patientId: patient.id }
-            }));
-
             setIsEditing(false);
             setSelectedTest(null);
-            
-
-            setTimeout(() => {
-                onClose();
-            }, 500);
-
         } catch (error) {
             console.error('خطأ في تحديث التحليل:', error);
             alert('حدث خطأ في تحديث التحليل');
@@ -87,15 +78,7 @@ export default function TestsModal({ isOpen, onClose, patient, testRequests }) {
             if (error) throw error;
 
 
-            window.dispatchEvent(new CustomEvent('testRequestDeleted', {
-                detail: { testRequestId: testId, patientId: patient.id }
-            }));
-
-
-            setTimeout(() => {
-                onClose();
-            }, 500);
-
+            // الاعتماد على Realtime لتحديث القائمة تلقائياً
         } catch (error) {
             console.error('خطأ في حذف التحليل:', error);
             alert('حدث خطأ في حذف التحليل');
@@ -107,6 +90,7 @@ export default function TestsModal({ isOpen, onClose, patient, testRequests }) {
     const getStatusIcon = (status) => {
         switch (status) {
             case 'تم':
+            case 'مكتمل':
                 return <CheckCircleIcon className="text-green-600" fontSize="small" />;
             case 'قيد التنفيذ':
                 return <HourglassEmptyIcon className="text-yellow-600" fontSize="small" />;
@@ -120,6 +104,7 @@ export default function TestsModal({ isOpen, onClose, patient, testRequests }) {
     const getStatusColor = (status) => {
         switch (status) {
             case 'تم':
+            case 'مكتمل':
                 return 'bg-green-100 text-green-800';
             case 'قيد التنفيذ':
                 return 'bg-yellow-100 text-yellow-800';
@@ -194,10 +179,26 @@ export default function TestsModal({ isOpen, onClose, patient, testRequests }) {
                                             </p>
 
                                             {test.result && (
-                                                <div className="mb-2 p-3 bg-green-50 rounded-lg">
-                                                    <p className="text-green-800">
-                                                        <strong>النتيجة:</strong> {test.result}
+                                                <div className="mb-2 p-3 bg-blue-50 rounded-lg">
+                                                    <p className="text-blue-800">
+                                                        <strong>ملاحظة الطبيب:</strong> {test.result}
                                                     </p>
+                                                </div>
+                                            )}
+
+                                            {test.result_value && (
+                                                <div className="mb-2 p-4 bg-green-50 border-r-4 border-green-500 rounded-lg shadow-sm">
+                                                    <p className="text-green-900 font-bold mb-1 flex items-center gap-2">
+                                                        <ScienceIcon fontSize="small" /> 🧪 نتيجة المعمل:
+                                                    </p>
+                                                    <p className="text-green-800 whitespace-pre-wrap">
+                                                        {test.result_value}
+                                                    </p>
+                                                    {test.lab_notes && (
+                                                        <p className="text-gray-500 text-xs mt-2 italic border-t pt-1">
+                                                            ملاحظات المعمل: {test.lab_notes}
+                                                        </p>
+                                                    )}
                                                 </div>
                                             )}
 

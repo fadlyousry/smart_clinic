@@ -38,6 +38,7 @@ const useAuthStore = create(
 
           const metadata = data.user?.user_metadata || null;
           let doctorId = null;
+          let labId = null;
           let isAdmin = false;
 
           // لو المستخدم دكتور، هنجيب الـ doctor_id و is_admin من جدول doctors
@@ -56,11 +57,25 @@ const useAuthStore = create(
             }
           }
 
-          set({ current_user: { ...metadata, doctor_id: doctorId, is_admin: isAdmin, auth_uid: data.user?.id } });
+          // لو المستخدم فني معمل، هنجيب الـ lab_id من جدول lab_users
+          if (metadata?.role === 'lab' && data.user?.id) {
+            const { data: labData, error: labError } = await supabase
+              .from('lab_users')
+              .select('id')
+              .eq('user_id', data.user.id)
+              .single();
+
+            if (!labError && labData) {
+              labId = labData.id;
+            }
+          }
+
+          set({ current_user: { ...metadata, doctor_id: doctorId, lab_id: labId, is_admin: isAdmin, auth_uid: data.user?.id } });
           get().showAlert('success', 'تم تسجيل الدخول بنجاح', 'مرحباً بعودتك!');
           if (metadata.role == 'doctor') navigate('/DoctorDashboard');
           else if (metadata.role == 'nurse') navigate('/nursing-dashboard');
           else if (metadata.role == 'reception') navigate('/reception-dashboard');
+          else if (metadata.role == 'lab') navigate('/lab-dashboard');
           else navigate('/');
         } catch (error) {
           get().showAlert('error', 'خطأ في تسجيل الدخول', 'يوجد خطأ فى الايميل أو كلمة السر');

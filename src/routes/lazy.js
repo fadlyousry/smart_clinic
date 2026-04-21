@@ -31,3 +31,7 @@ export const Footer = lazy(() => import('../Components/Footer/Footer'));
 export const Layout = lazy(() => import('../Components/Layout/Layout'));
 export const Notfound = lazy(() => import('../Components/Notfound/Notfound'));
 export const PatientRecordContainer = lazy(() => import('../Components/Navbar/PatientRecord.jsx'));
+export const LabLayout = lazy(() => import('../pages/LabDashboard/LabLayout.jsx'));
+export const LabHome = lazy(() => import('../pages/LabDashboard/LabHome.jsx'));
+export const CompletedRequests = lazy(() => import('../pages/LabDashboard/pages/CompletedRequests.jsx'));
+export const LabCalendar = lazy(() => import('../pages/LabDashboard/pages/LabCalendar.jsx'));

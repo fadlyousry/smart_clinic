@@ -20,6 +20,7 @@ export const PatientView = lazy(() => import('../pages/DoctorProfile/PatientView
 export const DoctorProfile = lazy(() => import('../pages/DoctorProfile/DoctorDashProfile.jsx'));
 // export const PatientProfile = lazy(() => import('../pages/PatientProfile/PatientProfile.jsx'));
 export const MedicalArticles = lazy(() => import('../pages/MedicalArticles/MedicalArticles.jsx'));
+export const DoctorCalendar = lazy(() => import('../pages/doctorDashbord/pages/DoctorCalendar.jsx'));
 
 export const Home = lazy(() => import('../Components/Home/Home'));
 export const About = lazy(() => import('../Components/Home/AboutClinic.jsx'));

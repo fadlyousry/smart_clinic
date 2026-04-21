@@ -27,17 +27,17 @@ const QuickStats = memo(({ stats }) => {
     },
     {
       icon: <CheckCircle fontSize="small" />,
-      label: 'وصلوا العيادة',
-      value: stats.arrived,
-      color: '#1D4ED8',
-      bgColor: '#DBEAFE',
-    },
-    {
-      icon: <HourglassEmpty fontSize="small" />,
-      label: 'في الانتظار',
+      label: 'في قاعة الانتظار',
       value: stats.waiting,
       color: '#B45309',
       bgColor: '#FEF3C7',
+    },
+    {
+      icon: <HourglassEmpty fontSize="small" />,
+      label: 'محجوز',
+      value: stats.booked ?? stats.arrived ?? 0,
+      color: '#1D4ED8',
+      bgColor: '#DBEAFE',
     },
     {
       icon: <Cancel fontSize="small" />,

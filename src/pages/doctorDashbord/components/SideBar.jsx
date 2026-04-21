@@ -6,6 +6,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import ScienceIcon from "@mui/icons-material/Science";
 import BarChartIcon from "@mui/icons-material/BarChart";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { NavLink } from "react-router-dom";
 import logo from "../../../assets/logo2.png";
 import CloseIcon from "@mui/icons-material/Close";
@@ -60,6 +61,11 @@ function SideBar({ isOpen, toggleSidebar }) {
                     <li className="sidebar-item">
                         <NavLink to="/DoctorDashboard/appointments" className="sidebar-link">
                             <EventIcon /> المواعيد
+                        </NavLink>
+                    </li>
+                    <li className="sidebar-item">
+                        <NavLink to="/DoctorDashboard/calendar" className="sidebar-link">
+                            <CalendarMonthIcon /> التقويم
                         </NavLink>
                     </li>
                     <li className="sidebar-item">

@@ -12,6 +12,7 @@ import Prescription from './Prescription';
 import Tests from './Tests';
 import Statistics from './Statistics';
 import DoctorDashProfile from '../../DoctorProfile/DoctorDashProfile';
+import DoctorCalendar from './DoctorCalendar';
 
 import { setupRealtimePatients } from '../../../lib/supabaseRealtime';
 import useAuthStore from '../../../store/auth';
@@ -44,6 +45,7 @@ function DoctorDashboard() {
           <Route path="prescription" element={<Prescription />} />
           <Route path="tests" element={<Tests />} />
           <Route path="statistics" element={<Statistics />} />
+          <Route path="calendar" element={<DoctorCalendar />} />
         </Routes>
       </div>
     </div>

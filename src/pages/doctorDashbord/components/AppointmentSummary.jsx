@@ -1,6 +1,6 @@
-const statuses = [
+﻿const statuses = [
     { label: "تم", color: "bg-green-500" },
-    { label: "في الإنتظار", color: "bg-yellow-500" },
+    { label: "محجوز", color: "bg-yellow-500" },
     { label: "ملغي", color: "bg-red-500" },
 ];
 

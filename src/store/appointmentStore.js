@@ -74,7 +74,7 @@ const useAppointmentStore = create((set, get) => ({
       console.log('Inserting appointment:', appointment);
       const newAppointment = {
         date: appointment.date,
-        status: appointment.status || 'في الإنتظار',
+        status: appointment.status || 'محجوز',
         reason: appointment.notes || null,
         amount: appointment.amount || null,
         payment: appointment.payment || false,

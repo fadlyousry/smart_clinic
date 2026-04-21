@@ -1,6 +1,6 @@
 
 import AppointmentTableRow from "./AppointmentTableRow";
-const AppointmentTable = ({ appointments, onViewDetails }) => {
+const AppointmentTable = ({ appointments, onViewDetails, onReceivePatient, onEndExam }) => {
   return (
     <div className="hidden md:block overflow-x-auto bg-white">
       <table className="min-w-full divide-y divide-gray-100 rounded-2xl">
@@ -19,6 +19,8 @@ const AppointmentTable = ({ appointments, onViewDetails }) => {
               key={appointment.id} 
               appointment={appointment} 
               onViewDetails={onViewDetails}
+              onReceivePatient={onReceivePatient}
+              onEndExam={onEndExam}
             />
           ))}
         </tbody>

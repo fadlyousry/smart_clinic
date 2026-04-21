@@ -1,4 +1,4 @@
-
+﻿
 
 
 
@@ -201,7 +201,7 @@ function PatientMedicalRecord({ patient = {}, records = {} }) {
                                                 <label className="text-xs sm:text-sm font-medium text-gray-500">الحالة</label>
                                                 <p className={`font-semibold ${appt.status === 'تم' ? 'text-green-600' :
                                                     appt.status === 'ملغي' ? 'text-red-600' :
-                                                        appt.status === 'في الإنتظار' ? 'text-yellow-600 ' :
+                                                        appt.status === 'محجوز' ? 'text-yellow-600 ' :
                                                             'text-gray-800'}`}>
                                                     {appt.status === 'confirmed' ? 'مؤكد' :
                                                         appt.status === 'cancelled' ? 'ملغي' :

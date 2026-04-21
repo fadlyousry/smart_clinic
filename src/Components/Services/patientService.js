@@ -1,4 +1,4 @@
-import { supabase } from '../../supaBase/booking';
+﻿import { supabase } from '../../supaBase/booking';
 
 export async function fetchPatientByPhone(phone) {
   if (!phone) throw new Error('Phone number is required');
@@ -175,7 +175,7 @@ export async function getQueuePosition(patientId, doctorId = null) {
       .from('appointments')
       .select('*, doctor:doctor_id(name)')
       .eq('patient_id', patientId)
-      .eq('status', 'في الإنتظار')
+      .eq('status', 'محجوز')
       .order('date', { ascending: true })
       .order('time', { ascending: true });
 
@@ -197,7 +197,7 @@ export async function getQueuePosition(patientId, doctorId = null) {
       .from('appointments')
       .select('*')
       .eq('date', appointmentDate)
-      .eq('status', 'في الإنتظار')
+      .eq('status', 'محجوز')
       .eq('doctor_id', nextAppointment.doctor_id)
       .lt('time', appointmentTime)
       .order('time', { ascending: true });
@@ -208,7 +208,7 @@ export async function getQueuePosition(patientId, doctorId = null) {
       .from('appointments')
       .select('*', { count: 'exact' })
       .eq('date', appointmentDate)
-      .eq('status', 'في الإنتظار')
+      .eq('status', 'محجوز')
       .eq('doctor_id', nextAppointment.doctor_id);
 
     if (totalError) throw totalError;
@@ -263,7 +263,7 @@ export async function getDoctorAppointmentsForToday(doctorId, date = null) {
     )
     .eq('doctor_id', doctorId)
     .eq('date', targetDate)
-    .eq('status', 'في الإنتظار')
+    .eq('status', 'محجوز')
     .order('time', { ascending: true });
 
   if (error) throw error;

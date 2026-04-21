@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Close, 
@@ -72,7 +72,7 @@ export const AppointmentModal = ({
         notes: editData.reason || '',
         doctor_id: editData.doctor_id || '',
         appointmentDateTime: formatDateTime(editData.date),
-        status: editData.status || 'في الإنتظار',
+        status: editData.status || 'محجوز',
         amount: editData.amount || null,
         payment: editData.payment || false,
         patient_id: editData.patient_id || null,
@@ -199,7 +199,7 @@ export const AppointmentModal = ({
         notes: '',
         doctor_id: '',
         appointmentDateTime: '',
-        status: 'في الإنتظار',
+        status: 'محجوز',
         amount: null,
         payment: false,
       });

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { FilterList, Close, LocalHospital, Payment, EventNote, CheckCircle } from '@mui/icons-material';
 import { getDoctorColor } from '../../utils/calendarHelpers';
 
@@ -116,8 +116,8 @@ const CalendarFilters = ({ filters, setFilters, doctors, appointments }) => {
                 <div className="flex flex-wrap gap-1.5">
                   {[
                     { value: 'all', label: 'الكل', color: '#64748B' },
-                    { value: 'في الإنتظار', label: 'في الانتظار', color: '#F59E0B' },
-                    { value: 'وصل العيادة', label: 'وصل العيادة', color: '#3B82F6' },
+                    { value: 'محجوز', label: 'في الانتظار', color: '#F59E0B' },
+                    { value: 'في قاعة الانتظار', label: 'في قاعة الانتظار', color: '#3B82F6' },
                     { value: 'تم', label: 'تم الكشف', color: '#10B981' },
                     { value: 'ملغى', label: 'ملغى', color: '#EF4444' },
                   ].map(opt => (

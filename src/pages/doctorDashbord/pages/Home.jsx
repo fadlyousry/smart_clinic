@@ -43,26 +43,27 @@ const Home = () => {
   }
 
   const todayAppointments = appointments
-    .filter(app => app.date.startsWith(today) && app.status === 'وصل العيادة')
+    .filter(app => app.date.startsWith(today) && (app.status === 'في قاعة الانتظار' || app.status === 'في الكشف'))
     .map(app => {
       const patient = patients.find(p => p.id === app.patient_id);
       return {
         id: app.id,
+        patient_id: app.patient_id,
         patient: patient?.fullName || "مريض غير معروف",
-        time: new Date(`1970-01-01T${app.time}`).toLocaleTimeString("ar-EG", {
+        time: app.time ? new Date(`1970-01-01T${app.time}`).toLocaleTimeString("ar-EG", {
           hour: "2-digit",
           minute: "2-digit",
-        }),
+        }) : "",
         reason: app.reason,
         status: app.status,
-        type: app.visitType, // Changed from type to visitType based on schema
+        type: app.visitType,
       };
     });
 
   const stats = [
     {
       title: "المرضى بالعيادة",
-      value: appointments.filter(app => app.date.startsWith(today) && app.status === 'وصل العيادة').length,
+      value: appointments.filter(app => app.date.startsWith(today) && (app.status === 'في قاعة الانتظار' || app.status === 'في الكشف')).length,
       icon: <UserPlus className="text-blue-500" />,
     },
     {
@@ -74,17 +75,17 @@ const Home = () => {
   const reson = [
     {
       title: "كشف",
-      value: appointments.filter(app => app.visitType === 'فحص' && app.status === 'في الإنتظار').length,
+      value: appointments.filter(app => app.visitType === 'فحص' && app.status === 'محجوز').length,
       icon: <UserPlus className="text-blue-500" />,
     },
     {
       title: "متابعه",
-      value: appointments.filter(app => app.visitType === 'متابعة' && app.status === 'في الإنتظار').length,
+      value: appointments.filter(app => app.visitType === 'متابعة' && app.status === 'محجوز').length,
       icon: <CalendarCheck className="text-yellow-500" />,
     },
     {
       title: "إستشاره",
-      value: appointments.filter(app => app.visitType === 'إستشارة' && app.status === 'في الإنتظار').length,
+      value: appointments.filter(app => app.visitType === 'إستشارة' && app.status === 'محجوز').length,
       icon: <AlertCircle className="text-green-500" />,
     },
   ];

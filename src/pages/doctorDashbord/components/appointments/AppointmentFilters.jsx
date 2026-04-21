@@ -1,4 +1,4 @@
-import FilterListIcon from '@mui/icons-material/FilterList';
+﻿import FilterListIcon from '@mui/icons-material/FilterList';
 import SearchIcon from '@mui/icons-material/Search';
 import { Clock, User, Stethoscope, Search, Frown } from "lucide-react";
 
@@ -14,7 +14,7 @@ const AppointmentFilters = ({ searchQuery, setSearchQuery, statusFilter, setStat
         >
           <option value="الكل">الكل</option>
           <option value="تم">تم</option>
-          <option value="في الإنتظار">في الإنتظار</option>
+          <option value="محجوز">محجوز</option>
           <option value="ملغي">ملغي</option>
         </select>
         <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center pr-2">

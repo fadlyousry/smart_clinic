@@ -1,11 +1,12 @@
 const StatusBadge = ({ status }) => {
   const getStatusStyles = (status) => {
     switch(status) {
-      case "في الإنتظار": return "bg-orange-100 text-yellow-800";
-      case "ملغي": return "bg-red-100 text-red-800";
-      case "قيد الكشف": return "bg-yellow-200 text-yellow-900";
-      case "تم": return "bg-green-200 text-green-800";
-      default: return "bg-gray-100 text-yellow-800";
+      case "محجوز": return "bg-blue-100 text-blue-800";
+      case "في قاعة الانتظار": return "bg-amber-100 text-amber-800";
+      case "في الكشف": return "bg-purple-100 text-purple-800";
+      case "تم": return "bg-green-100 text-green-800";
+      case "ملغى": return "bg-red-100 text-red-800";
+      default: return "bg-gray-100 text-gray-800";
     }
   };
 

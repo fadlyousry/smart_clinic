@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react';
+﻿import React, { useState, useEffect, memo } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { useMediaQuery } from 'react-responsive';
 import { supabase } from '../../../supaBase/NursingBooking';
@@ -12,7 +12,7 @@ const AppointmentItem = memo(({ appt, index, moveAppointment }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editFormData, setEditFormData] = useState({
     appointmentDateTime: appt.date || '',
-    status: appt.status || 'في الإنتظار',
+    status: appt.status || 'محجوز',
     visitType: appt.visitType || '',
     payment: appt.payment || false,
     amount: appt.amount || null,

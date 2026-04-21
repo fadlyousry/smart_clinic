@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion } from 'framer-motion';
 import Swal from 'sweetalert2';
 
@@ -57,7 +57,7 @@ export const EditForm = ({ editFormData, handleEditChange, handleEditSubmit, set
         className="w-full p-3 border border-gray-300 rounded-lg"
         required
       >
-        <option value="في الإنتظار">في الإنتظار</option>
+        <option value="محجوز">محجوز</option>
         <option value="ملغى">ملغى</option>
         <option value="تم">تم</option>
       </select>

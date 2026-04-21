@@ -1,7 +1,7 @@
-import { User, Stethoscope, CalendarClock, Info } from "lucide-react";
+import { User, Stethoscope, CalendarClock, Info, UserCheck, CheckCircle } from "lucide-react";
 import StatusBadge from "./StatusBadge";
 
-const AppointmentMobileCard = ({ appointment, onViewDetails }) => {
+const AppointmentMobileCard = ({ appointment, onViewDetails, onReceivePatient, onEndExam }) => {
   return (
     <div className="rounded-2xl p-4 shadow-sm bg-white mb-4">
 
@@ -39,7 +39,27 @@ const AppointmentMobileCard = ({ appointment, onViewDetails }) => {
       </div>
 
 
-      <div className="mt-4 flex justify-end">
+      <div className="mt-4 flex justify-end gap-2">
+        {/* زر استقبال المريض */}
+        {onReceivePatient && appointment.status === "في قاعة الانتظار" && (
+          <button
+            onClick={() => onReceivePatient(appointment)}
+            className="flex items-center gap-1 px-3 py-1.5 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors text-sm font-medium"
+          >
+            <UserCheck size={14} />
+            استقبال
+          </button>
+        )}
+        {/* زر إنهاء الكشف */}
+        {onEndExam && appointment.status === "في الكشف" && (
+          <button
+            onClick={() => onEndExam(appointment)}
+            className="flex items-center gap-1 px-3 py-1.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm font-medium"
+          >
+            <CheckCircle size={14} />
+            إنهاء الكشف
+          </button>
+        )}
         <button
           onClick={() => onViewDetails?.(appointment)}
           className="text-blue-600 hover:text-blue-900 text-sm px-3 py-1 hover:bg-cyan-100 rounded-2xl"

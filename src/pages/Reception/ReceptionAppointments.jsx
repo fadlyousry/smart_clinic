@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { supabase } from '../../supaBase/ReceptionBooking';
 import useAppointmentStore from '../../store/appointmentStore';
 import { AppointmentHelmet } from './components/AppointmentHelmet';
@@ -25,7 +25,7 @@ const ReceptionAppointments = () => {
     notes: '',
     doctor_id: '',
     appointmentDateTime: '',
-    status: 'في الإنتظار',
+    status: 'محجوز',
     amount: null,
     payment: false,
   });
@@ -109,7 +109,7 @@ const ReceptionAppointments = () => {
       notes: '',
       doctor_id: '',
       appointmentDateTime: '',
-      status: 'في الإنتظار',
+      status: 'محجوز',
       amount: null,
       payment: false,
     });

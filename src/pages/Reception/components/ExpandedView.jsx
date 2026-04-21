@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 import Swal from 'sweetalert2';
 import { ErrorBoundary } from './ErrorBoundary';
@@ -71,7 +71,7 @@ export const ExpandedView = ({
                     <span className="font-semibold text-gray-700">الحالة:</span>
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        appt.status === 'في الإنتظار'
+                        appt.status === 'محجوز'
                           ? 'bg-yellow-100 text-yellow-800'
                           : appt.status === 'ملغى'
                           ? 'bg-red-100 text-red-800'

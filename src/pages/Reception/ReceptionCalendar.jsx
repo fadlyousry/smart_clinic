@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { supabase } from '../../supaBase/ReceptionBooking';
 import useCalendarData from './hooks/useCalendarData';
 import QuickStats from './components/calendar/QuickStats';
@@ -21,7 +21,7 @@ const ReceptionCalendar = () => {
   const [formData, setFormData] = useState({
     fullName: '', address: '', age: '', phoneNumber: '',
     visitType: '', notes: '', doctor_id: '', appointmentDateTime: '',
-    status: 'في الإنتظار', amount: null, payment: false,
+    status: 'محجوز', amount: null, payment: false,
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -48,7 +48,7 @@ const ReceptionCalendar = () => {
     setFormData({
       fullName: '', address: '', age: '', phoneNumber: '',
       visitType: '', notes: '', doctor_id: '', appointmentDateTime: '',
-      status: 'في الإنتظار', amount: null, payment: false,
+      status: 'محجوز', amount: null, payment: false,
     });
     setFormErrors({});
     setShowModal(true);
@@ -70,7 +70,7 @@ const ReceptionCalendar = () => {
       notes: appt.reason || '',
       doctor_id: appt.doctor_id || '',
       appointmentDateTime: appt.date || '',
-      status: appt.status || 'في الإنتظار',
+      status: appt.status || 'محجوز',
       amount: appt.amount || null,
       payment: appt.payment || false,
       patient_id: appt.patient_id || null,

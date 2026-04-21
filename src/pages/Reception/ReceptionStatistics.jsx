@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../supaBase/ReceptionBooking';
 import useAppointmentStore from '../../store/appointmentStore';
 import { AppointmentCharts } from './components/AppointmentCharts';
@@ -61,7 +61,7 @@ const ReceptionStatistics = () => {
           dailyCounts[dateStr]++;
           if (appt.status === 'تم') {
             completedCounts[dateStr]++;
-          } else if (appt.status === 'في الإنتظار') {
+          } else if (appt.status === 'محجوز') {
             pendingCounts[dateStr]++;
           }
         }

@@ -25,15 +25,28 @@ export const getDoctorColor = (doctorId) => {
 
 // ─── Status Colors ───────────────────────────────────────────
 const STATUS_MAP = {
-  'في الإنتظار': { bg: '#FEF3C7', text: '#B45309', dot: '#F59E0B', label: 'في الانتظار' },
-  'وصل العيادة': { bg: '#DBEAFE', text: '#1D4ED8', dot: '#3B82F6', label: 'وصل العيادة' },
+  'محجوز': { bg: '#DBEAFE', text: '#1D4ED8', dot: '#3B82F6', label: 'محجوز' },
+  'في قاعة الانتظار': { bg: '#FEF3C7', text: '#B45309', dot: '#F59E0B', label: 'في الانتظار' },
+  'في الكشف': { bg: '#EDE9FE', text: '#6D28D9', dot: '#8B5CF6', label: 'في الكشف' },
   'تم': { bg: '#D1FAE5', text: '#065F46', dot: '#10B981', label: 'تم الكشف' },
   'ملغى': { bg: '#FFE4E6', text: '#BE123C', dot: '#EF4444', label: 'ملغى' },
+  // Backward compatibility
+  'في الإنتظار': { bg: '#FEF3C7', text: '#B45309', dot: '#F59E0B', label: 'في الانتظار' },
+  'وصل العيادة': { bg: '#DBEAFE', text: '#1D4ED8', dot: '#3B82F6', label: 'وصل العيادة' },
 };
 
 export const getStatusColor = (status) => {
-  return STATUS_MAP[status] || STATUS_MAP['في الإنتظار'];
+  return STATUS_MAP[status] || STATUS_MAP['محجوز'];
 };
+
+// قائمة الحالات الرسمية (بدون backward compat)
+export const STATUSES = [
+  { value: 'محجوز', label: 'محجوز', color: '#3B82F6' },
+  { value: 'في قاعة الانتظار', label: 'في قاعة الانتظار', color: '#F59E0B' },
+  { value: 'في الكشف', label: 'في الكشف', color: '#8B5CF6' },
+  { value: 'تم', label: 'تم', color: '#10B981' },
+  { value: 'ملغى', label: 'ملغى', color: '#EF4444' },
+];
 
 // ─── Working Hours (localStorage) ────────────────────────────
 const SETTINGS_KEY = 'clinic_settings';
@@ -181,10 +194,13 @@ export const calculateStats = (appointments, targetDate = new Date()) => {
 
   return {
     total: todayAppts.length,
-    arrived: todayAppts.filter(a => a.status === 'وصل العيادة').length,
-    waiting: todayAppts.filter(a => a.status === 'في الإنتظار').length,
+    booked: todayAppts.filter(a => a.status === 'محجوز').length,
+    waiting: todayAppts.filter(a => a.status === 'في قاعة الانتظار').length,
+    inProgress: todayAppts.filter(a => a.status === 'في الكشف').length,
     done: todayAppts.filter(a => a.status === 'تم').length,
     cancelled: todayAppts.filter(a => a.status === 'ملغى').length,
+    // backward compat
+    arrived: todayAppts.filter(a => a.status === 'في قاعة الانتظار' || a.status === 'وصل العيادة').length,
     revenue: todayAppts.filter(a => a.payment).reduce((sum, a) => sum + (a.amount || 0), 0),
     unpaid: todayAppts.filter(a => !a.payment).length,
   };

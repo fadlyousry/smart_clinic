@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { supabase } from '../../supaBase/NursingBooking';
@@ -31,7 +31,7 @@ const NursingAppointments = () => {
     notes: '',
     doctor_id: '',
     appointmentDateTime: '',
-    status: 'في الإنتظار',
+    status: 'محجوز',
     amount: null,
     payment: false,
   });
@@ -113,7 +113,7 @@ const NursingAppointments = () => {
     }
 
     // Filter by status for Nursing (Only show those who reached the clinic)
-    filtered = filtered.filter(appt => appt.status === 'وصل العيادة');
+    filtered = filtered.filter(appt => appt.status === 'في قاعة الانتظار');
 
     setFilteredAppointments(filtered);
   }, [appointments, filter, searchQuery]);
@@ -152,7 +152,7 @@ const NursingAppointments = () => {
           dailyCounts[dateStr]++;
           if (appt.status === 'تم') {
             completedCounts[dateStr]++;
-          } else if (appt.status === 'في الإنتظار') {
+          } else if (appt.status === 'محجوز') {
             pendingCounts[dateStr]++;
           }
         }

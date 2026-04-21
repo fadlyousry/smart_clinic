@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Close } from '@mui/icons-material';
 import * as Yup from 'yup';
@@ -178,7 +178,7 @@ export const AppointmentModal = ({
         notes: '',
         doctor_id: '',
         appointmentDateTime: '',
-        status: 'في الإنتظار',
+        status: 'محجوز',
         amount: null,
         payment: false,
       });

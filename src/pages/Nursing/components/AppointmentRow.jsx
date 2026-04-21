@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 import { Delete, Visibility } from '@mui/icons-material';
 import Swal from 'sweetalert2';
@@ -63,7 +63,7 @@ export const AppointmentRow = ({ appt, index, isDragging, drag, drop, isMobile, 
       <td className="py-4">
         <span
           className={`badge px-3 py-1 rounded-full text-sm shadow-sm flex items-center gap-1 ${
-            appt.status === 'في الإنتظار'
+            appt.status === 'محجوز'
               ? 'bg-gradient-to-br from-yellow-50 to-yellow-100 text-yellow-800'
               : appt.status === 'ملغى'
               ? 'bg-gradient-to-br from-red-50 to-red-100 text-red-800'
@@ -72,7 +72,7 @@ export const AppointmentRow = ({ appt, index, isDragging, drag, drop, isMobile, 
         >
           <i
             className={`bi bi-${
-              appt.status === 'في الإنتظار' ? 'clock' : appt.status === 'ملغى' ? 'x-circle' : 'check-circle'
+              appt.status === 'محجوز' ? 'clock' : appt.status === 'ملغى' ? 'x-circle' : 'check-circle'
             }`}
           ></i>
           {appt.status || 'غير محدد'}

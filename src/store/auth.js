@@ -33,11 +33,29 @@ const useAuthStore = create(
             throw error;
           }
 
-          set({ current_user: data.user?.user_metadata || null });
+          const metadata = data.user?.user_metadata || null;
+          let doctorId = null;
+
+          // لو المستخدم دكتور، هنجيب الـ doctor_id من جدول doctors
+          if (metadata?.role === 'doctor' && data.user?.id) {
+            const { data: doctorData, error: doctorError } = await supabase
+              .from('doctors')
+              .select('id')
+              .eq('user_id', data.user.id)
+              .single();
+
+            if (!doctorError && doctorData) {
+              doctorId = doctorData.id;
+            } else {
+              console.warn('لم يتم العثور على ملف الطبيب المرتبط بهذا الحساب');
+            }
+          }
+
+          set({ current_user: { ...metadata, doctor_id: doctorId, auth_uid: data.user?.id } });
           get().showAlert('success', 'تم تسجيل الدخول بنجاح', 'مرحباً بعودتك!');
-          if (data.user?.user_metadata.role == 'doctor') navigate('/DoctorDashboard');
-          else if (data.user?.user_metadata.role == 'nurse') navigate('/nursing-dashboard');
-          else if (data.user?.user_metadata.role == 'reception') navigate('/reception-dashboard');
+          if (metadata.role == 'doctor') navigate('/DoctorDashboard');
+          else if (metadata.role == 'nurse') navigate('/nursing-dashboard');
+          else if (metadata.role == 'reception') navigate('/reception-dashboard');
           else navigate('/');
         } catch (error) {
           get().showAlert('error', 'خطأ في تسجيل الدخول', 'يوجد خطأ فى الايميل أو كلمة السر');
@@ -143,6 +161,8 @@ const useAuthStore = create(
       CUaddress: () => get().current_user?.address || '',
       CUphone: () => get().current_user?.phone || '',
       CUrole: () => get().current_user?.role || '',
+      CUdoctorId: () => get().current_user?.doctor_id || null,
+      CUauthUid: () => get().current_user?.auth_uid || null,
     }),
     {
       name: 'auth-storage',

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Close, 
@@ -139,10 +139,10 @@ export const AppointmentViewModal = ({ show, onClose, appt, updateAppointment })
                  
                  <div className="grid grid-cols-3 gap-3">
                     <button
-                      onClick={() => handleStatusUpdate('وصل العيادة')}
-                      disabled={appt.status === 'وصل العيادة'}
+                      onClick={() => handleStatusUpdate('في قاعة الانتظار')}
+                      disabled={appt.status === 'في قاعة الانتظار'}
                       className={`flex flex-col items-center gap-2 p-3 rounded-2xl transition-all border ${
-                        appt.status === 'وصل العيادة' 
+                        appt.status === 'في قاعة الانتظار' 
                         ? 'bg-blue-50 border-blue-200 text-blue-600 opacity-50' 
                         : 'bg-white border-gray-100 text-gray-600 hover:border-blue-200 hover:bg-blue-50/50'
                       }`}
@@ -152,10 +152,10 @@ export const AppointmentViewModal = ({ show, onClose, appt, updateAppointment })
                     </button>
                     
                     <button
-                      onClick={() => handleStatusUpdate('في الإنتظار')}
-                      disabled={appt.status === 'في الإنتظار'}
+                      onClick={() => handleStatusUpdate('محجوز')}
+                      disabled={appt.status === 'محجوز'}
                       className={`flex flex-col items-center gap-2 p-3 rounded-2xl transition-all border ${
-                        appt.status === 'في الإنتظار' 
+                        appt.status === 'محجوز' 
                         ? 'bg-amber-50 border-amber-200 text-amber-600 opacity-50' 
                         : 'bg-white border-gray-100 text-gray-600 hover:border-amber-200 hover:bg-amber-50/50'
                       }`}

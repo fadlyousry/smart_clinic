@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 import { Delete, Visibility, CheckCircle, Edit, AttachMoney } from '@mui/icons-material';
 import Swal from 'sweetalert2';
@@ -48,7 +48,7 @@ export const AppointmentRow = ({
       cancelButtonColor: '#3085d6',
     });
     if (result.isConfirmed) {
-      await updateAppointment(appt.id, { status: 'وصل العيادة' });
+      await updateAppointment(appt.id, { status: 'في قاعة الانتظار' });
     }
   };
 
@@ -100,17 +100,17 @@ export const AppointmentRow = ({
       )}
       <td className="py-4 text-center">
         <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold shadow-sm transition-all ${
-          appt.status === 'في الإنتظار'
+          appt.status === 'محجوز'
             ? 'bg-amber-50 text-amber-700 border border-amber-100'
-            : appt.status === 'وصل العيادة'
+            : appt.status === 'في قاعة الانتظار'
             ? 'bg-blue-50 text-blue-700 border border-blue-100'
             : appt.status === 'ملغى'
             ? 'bg-rose-50 text-rose-700 border border-rose-100'
             : 'bg-emerald-50 text-emerald-700 border border-emerald-100'
         }`}>
           <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${
-             appt.status === 'في الإنتظار' ? 'bg-amber-500' : 
-             appt.status === 'وصل العيادة' ? 'bg-blue-500' : 
+             appt.status === 'محجوز' ? 'bg-amber-500' : 
+             appt.status === 'في قاعة الانتظار' ? 'bg-blue-500' : 
              appt.status === 'ملغى' ? 'bg-rose-500' : 'bg-emerald-500'
           }`}></div>
           {appt.status || 'غير محدد'}
@@ -161,7 +161,7 @@ export const AppointmentRow = ({
           </button>
           
           {/* Check-in Action */}
-          {appt.status === 'في الإنتظار' && (
+          {appt.status === 'محجوز' && (
             <button
               onClick={handleCheckIn}
               className="px-4 py-2 text-white rounded-xl shadow-lg transition-all font-black text-xs h-[42px] hover:brightness-110 active:scale-95"

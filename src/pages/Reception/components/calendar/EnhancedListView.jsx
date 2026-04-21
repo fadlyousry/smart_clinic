@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+﻿import React, { useMemo } from 'react';
 import { groupAppointmentsByDate, getDoctorColor, getStatusColor } from '../../utils/calendarHelpers';
 import AppointmentCard from './AppointmentCard';
 import { format, parseISO } from 'date-fns';
@@ -36,8 +36,8 @@ const EnhancedListView = ({ selectedDate, appointments, onView, onEdit }) => {
           // إحصائيات اليوم
           const dayStats = {
             total: appts.length,
-            arrived: appts.filter(a => a.status === 'وصل العيادة').length,
-            waiting: appts.filter(a => a.status === 'في الإنتظار').length,
+            arrived: appts.filter(a => a.status === 'في قاعة الانتظار').length,
+            waiting: appts.filter(a => a.status === 'محجوز').length,
             done: appts.filter(a => a.status === 'تم').length,
             cancelled: appts.filter(a => a.status === 'ملغى').length,
             paid: appts.filter(a => a.payment).length,

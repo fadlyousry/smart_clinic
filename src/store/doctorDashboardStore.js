@@ -169,7 +169,7 @@ const useDoctorDashboardStore = create((set, get) => ({
         loading: false,
       });
 
-      const currentVisit = appointmentsData?.find(a => a.status === 'قيد الكشف');
+      const currentVisit = appointmentsData?.find(a => a.status === 'في الكشف');
       set({ currentVisit: currentVisit || null });
 
       console.log(' All data fetched successfully');
@@ -272,23 +272,33 @@ const useDoctorDashboardStore = create((set, get) => ({
     }
   },
 
-  startVisit: async appointmentId => {
+  startVisit: async (appointmentId) => {
     try {
-      const { error } = await supabase.from('appointments').update({ status: 'قيد الكشف' }).eq('id', appointmentId);
+      // منع استقبال أكتر من مريض في نفس الوقت
+      const state = get();
+      const hasActiveExam = state.appointments.some(app => app.status === 'في الكشف');
+      if (hasActiveExam) {
+        return { error: 'يوجد مريض في الكشف حالياً. يرجى إنهاء الكشف الحالي أولاً.' };
+      }
+
+      const { error } = await supabase.from('appointments').update({ status: 'في الكشف' }).eq('id', appointmentId);
 
       if (error) throw error;
 
       set(state => {
         const updatedAppointments = state.appointments.map(app =>
-          app.id === appointmentId ? { ...app, status: 'قيد الكشف' } : app
+          app.id === appointmentId ? { ...app, status: 'في الكشف' } : app
         );
         return {
           appointments: removeDuplicates(updatedAppointments),
           currentVisit: updatedAppointments.find(app => app.id === appointmentId),
         };
       });
+
+      return { success: true };
     } catch (error) {
       console.error('خطأ في بدء الكشف:', error.message);
+      return { error: error.message };
     }
   },
 
@@ -357,13 +367,13 @@ const useDoctorDashboardStore = create((set, get) => ({
 
   exetVisit: async appointmentId => {
     try {
-      const { error } = await supabase.from('appointments').update({ status: 'ملغي' }).eq('id', appointmentId);
+      const { error } = await supabase.from('appointments').update({ status: 'ملغى' }).eq('id', appointmentId);
 
       if (error) throw error;
 
       set(state => ({
         appointments: removeDuplicates(
-          state.appointments.map(app => (app.id === appointmentId ? { ...app, status: 'ملغي' } : app))
+          state.appointments.map(app => (app.id === appointmentId ? { ...app, status: 'ملغى' } : app))
         ),
         currentVisit: null,
       }));

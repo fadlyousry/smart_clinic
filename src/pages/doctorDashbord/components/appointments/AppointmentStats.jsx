@@ -1,4 +1,4 @@
-const StatCard = ({ title, value, bgColor }) => {
+﻿const StatCard = ({ title, value, bgColor }) => {
   const bgClass = {
     blue: "bg-blue-100 text-blue-800",
     green: "bg-green-100 text-green-800",
@@ -16,7 +16,7 @@ const StatCard = ({ title, value, bgColor }) => {
 
 const AppointmentStats = ({ appointments }) => {
   const completedCount = appointments.filter(a => a.status === "تم").length;
-  const waitingCount = appointments.filter(a => a.status === "في الإنتظار").length;
+  const waitingCount = appointments.filter(a => a.status === "محجوز").length;
   const cancelledCount = appointments.filter(a => a.status === "ملغي").length;
 
   return (
